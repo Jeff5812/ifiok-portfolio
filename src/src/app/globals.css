@@ -1,0 +1,166 @@
+@import "tailwindcss";
+
+/* ----------------------------------------------------------------------
+   Design tokens
+   Palette: warm-white canvas + near-black ink, with a violet→teal→amber
+   signal gradient used ONLY as an accent (never as a background fill) and
+   a status green reserved for "live / running" states — a direct nod to
+   n8n's execution-success color, grounded in the subject rather than
+   decorative.
+------------------------------------------------------------------------- */
+:root {
+  --canvas: #fafaf8;
+  --canvas-raised: #ffffff;
+  --ink: #0a0a0a;
+  --ink-soft: #6b6f76;
+  --line: #edede8;
+  --line-strong: #d8d8d2;
+
+  --signal-violet: #7c5cff;
+  --signal-teal: #2dd4bf;
+  --signal-amber: #ff7a59;
+  --status-live: #16a34a;
+
+  --font-display: var(--font-space-grotesk), "Space Grotesk", system-ui, sans-serif;
+  --font-body: var(--font-inter), "Inter", system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), "JetBrains Mono", ui-monospace, monospace;
+}
+
+@theme inline {
+  --color-canvas: var(--canvas);
+  --color-canvas-raised: var(--canvas-raised);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+
+  --color-signal-violet: var(--signal-violet);
+  --color-signal-teal: var(--signal-teal);
+  --color-signal-amber: var(--signal-amber);
+  --color-status-live: var(--status-live);
+
+  --font-sans: var(--font-display);
+  --font-mono: var(--font-mono);
+}
+
+* {
+  border-color: var(--line);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Headings use the display face (Space Grotesk) everywhere by default —
+   set once here instead of on every heading className across the site. */
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Visible keyboard focus everywhere — accessibility floor, non-negotiable */
+:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Utility: mono eyebrow / label style used across the site for structural
+   labels (section eyebrows, node kinds, status tags) — echoes n8n node
+   labels and terminal output rather than being decorative caps-lock text. */
+.label-mono {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.6875rem;
+  font-weight: 500;
+}
+
+/* 15% larger variant of .label-mono — used for primary nav links where the
+   standard label size reads slightly too small against the header logo. */
+.label-mono-lg {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  font-size: 0.79rem;
+  font-weight: 500;
+}
+
+/* Signal gradient text, used exactly once per view as the "boldness" element */
+.signal-gradient {
+  background: linear-gradient(
+    100deg,
+    var(--signal-violet) 0%,
+    var(--signal-teal) 50%,
+    var(--signal-amber) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+::selection {
+  background: var(--ink);
+  color: var(--canvas);
+}
+
+/* Assistant FAB: a quiet "I'm listening" pulse ring — monochrome, not the
+   signal gradient (that's reserved for the one accent per view, already
+   spent on the headline). Mirrors the existing status-live dot language
+   used for "Available" / "All systems building" instead of introducing a
+   second color story. */
+@media (prefers-reduced-motion: no-preference) {
+  .fab-ring::before {
+    content: "";
+    position: absolute;
+    inset: -4px;
+    border-radius: inherit;
+    border: 1px solid var(--line-strong);
+    animation: fabPing 2.8s cubic-bezier(0.2, 0.7, 0.3, 1) infinite;
+  }
+}
+
+@keyframes fabPing {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  75%,
+  100% {
+    transform: scale(1.35);
+    opacity: 0;
+  }
+}
+
+/* Hide scrollbar for the workflow canvas drag surface, keep it scrollable */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
