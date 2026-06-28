@@ -10,15 +10,15 @@ export const profile = {
   email: "wizicolumba@gmail.com",
   availability: "available" as "available" | "limited" | "unavailable",
 
-  headline: "I build systems that think, act, and ship, so people don't have to do the boring parts twice.",
+  headline: "Manual work doesn't scale. The systems that replace it should think for themselves.",
 
   subhead:
-    "I design AI-powered automation systems, workflow engines that make real decisions, agents that read and act. Currently deep in n8n, AI agent orchestration, and intelligent process automation.",
+    "I design AI-powered automation that makes real decisions, not just moves data between tools. Workflows that qualify leads, process documents, and route work without someone babysitting every step. Currently deep in n8n and AI agent orchestration.",
 
   // Used in <head>, OG tags, and the hero eyebrow.
   seoTitle: "Ifiok Columba, AI Automation Engineer",
   seoDescription:
-    "Ifiok Columba designs AI-powered automation systems, agent workflows, and intelligent automation solutions. Currently building in n8n, AI orchestration, and agent infrastructure.",
+    "Ifiok Columba designs AI automation that replaces manual, repetitive work with systems that make real decisions, lead qualification, document processing, and workflow orchestration built in n8n and AI agents.",
 
   social: {
     github: "https://github.com/Jeff5812",
@@ -57,7 +57,6 @@ export const profile = {
   },
 
   stats: [
-    { label: "Bootcamp", value: "In progress" },
     { label: "Core focus", value: "Automation" },
     { label: "Availability", value: "Open now" },
   ],

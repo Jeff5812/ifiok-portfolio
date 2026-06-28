@@ -35,7 +35,7 @@ export default function SiteFooter() {
   return (
     <footer className="border-t border-line bg-canvas">
       <div className="mx-auto max-w-7xl px-5 sm:px-8 py-16">
-        <div className="grid grid-cols-2 gap-8 sm:max-w-md">
+        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 sm:max-w-md sm:gap-8">
           {CONTENT_GROUPS.map((group) => (
             <div key={group.title}>
               <p className="label-mono text-ink-soft mb-4">{group.title}</p>

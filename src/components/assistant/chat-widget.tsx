@@ -16,7 +16,7 @@ function mockReply(prompt: string) {
   // Specific quick-action prompts from AgentsSection get their own real
   // answer, not the generic catch-all, these are what visitors actually
   // click first, so they're the most important ones to get right.
-  if (p.includes("route this lead") || p.includes("route") && p.includes("lead")) {
+  if (p.includes("route this lead") || (p.includes("route") && p.includes("lead"))) {
     return "Lead routing is a classic branching workflow: a form or webhook captures the lead, a scoring step (rule-based logic or an AI Agent node, depending on how messy the signal is) classifies it, then a Switch node sends it down the right path, hot leads to a CRM or Slack ping, warm leads to a nurture sequence, cold leads to a holding sheet. I've built this exact pattern in n8n with Gemini doing the judgment call on ambiguous leads.";
   }
   if (p.includes("score eligibility") || p.includes("eligibility")) {
@@ -29,20 +29,27 @@ function mockReply(prompt: string) {
     return "Application processing is intake, validation, and routing stitched together: a structured form catches the data, a validation step checks completeness and eligibility before anything moves forward, and the result gets routed to the right outcome with the reasoning attached. I've built this pattern for an admissions-style use case, form intake through to a routed decision.";
   }
 
-  if (p.includes("stack") || p.includes("tech")) {
-    return "I lead with automation and AI: n8n for workflow orchestration, AI Agent nodes powered by Gemini or OpenAI for the steps that need real judgment, and Ollama for local models when that's the better fit. On the product side I build full-stack with Next.js, TypeScript, Supabase/Postgres, and Tailwind, so I can ship the automation as an actual working product, not just a backend workflow.";
+  // Most-specific multi-word phrases next, checked before any single
+  // broad keyword (like "work" or "stack") that could appear inside them
+  // and steal the match. Order here matters: a phrase containing "work"
+  // must be checked before the generic p.includes("work") fallback below.
+  if (p.includes("start working") || p.includes("work together") || p.includes("get started")) {
+    return "Best way to start is just tell me what you're trying to automate, even roughly. I'll tell you honestly whether it's a good fit and what the first version would look like. Otherwise, email or the Contact section both reach me directly.";
+  }
+  if (p.includes("available") || p.includes("availability") || p.includes("freelance") || p.includes("hire")) {
+    return "Yes, I'm currently open to work, freelance or full-time. Share what you need automated and your timeline and I'll tell you if it's something I can take on now.";
+  }
+  if (p.includes("reach") || p.includes("contact") || p.includes("email")) {
+    return "Best way to reach me is email, or use the Contact section. Tell me what you're building here first if you want a head start on the conversation.";
   }
   if (p.includes("problem") && (p.includes("solve") || p.includes("business"))) {
     return "The problems I solve are the ones that eat a team's time without needing a person's judgment every step: lead qualification and routing, document intake and validation, eligibility checks, scheduled reporting that should already be in someone's inbox. I design the workflow to make the actual decision, not just move data between tools.";
   }
-  if (p.includes("project") || p.includes("work")) {
+  if (p.includes("stack") || p.includes("tech")) {
+    return "I lead with automation and AI: n8n for workflow orchestration, AI Agent nodes powered by Gemini or OpenAI for the steps that need real judgment, and Ollama for local models when that's the better fit.";
+  }
+  if (p.includes("project") || p.includes("portfolio") || p.includes("work")) {
     return "Recent work is rendered in the workflow canvas. If you tell me what you're building, I'll suggest how I'd automate it.";
-  }
-  if (p.includes("available") || p.includes("availability")) {
-    return "Yes, I'm currently open to work. Share what you need automated and your timeline.";
-  }
-  if (p.includes("reach") || p.includes("contact") || p.includes("email") || p.includes("start working")) {
-    return "Best way to reach me is email, use the Contact section, or just tell me what you're building here and I'll point you to the right next step.";
   }
 
   return "I can walk you through my stack, recent work, how I approach automation problems, or availability, just ask. What are you trying to ship?";
