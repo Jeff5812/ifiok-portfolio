@@ -46,7 +46,7 @@ function mockReply(prompt: string) {
     return "The problems I solve are the ones that eat a team's time without needing a person's judgment every step: lead qualification and routing, document intake and validation, eligibility checks, scheduled reporting that should already be in someone's inbox. I design the workflow to make the actual decision, not just move data between tools.";
   }
   if (p.includes("stack") || p.includes("tech")) {
-    return "I lead with automation and AI: n8n for workflow orchestration, AI Agent nodes powered by Gemini or OpenAI for the steps that need real judgment, and Ollama for local models when that's the better fit.";
+    return "I lead with automation and AI: n8n for workflow orchestration, AI Agent nodes powered by Gemini or OpenAI for the steps that need real judgment, and Claude when a task calls for more careful reasoning.";
   }
   if (p.includes("project") || p.includes("portfolio") || p.includes("work")) {
     return "Recent work is rendered in the workflow canvas. If you tell me what you're building, I'll suggest how I'd automate it.";

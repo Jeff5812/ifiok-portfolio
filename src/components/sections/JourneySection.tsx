@@ -1,67 +1,47 @@
-import { milestones } from "@/content/milestones";
-import { milestonesIntro } from "@/content/profile";
-
-const KIND_LABEL: Record<string, string> = {
-  bootcamp: "Bootcamp",
-  project: "Project",
-  certification: "Certification",
-  role: "Role",
-  milestone: "Milestone",
-};
-
-function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString("en-US", {
-    month: "short",
-    year: "numeric",
-  });
-}
-
 export default function JourneySection() {
   return (
-    <section id="journey" className="scroll-mt-16">
+    <section id="about" className="scroll-mt-16">
       <div>
-        <p className="label-mono text-ink-soft mb-3">The journey</p>
-        <h2 className="text-xl sm:text-2xl font-medium tracking-tight text-ink mb-2">
-          Still early. Building in public anyway.
+        <p className="label-mono text-ink-soft mb-3">About me</p>
+        <h2 className="text-xl sm:text-2xl font-medium tracking-tight text-ink mb-5">
+          I work where operations meet automation.
         </h2>
-        <p className="mb-8 max-w-md text-sm text-ink-soft leading-relaxed">
-          {milestonesIntro}
-        </p>
 
-        {milestones.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-line-strong p-8 text-center">
-            <p className="label-mono text-ink-soft mb-2">Nothing logged yet</p>
-            <p className="text-sm text-ink-soft max-w-sm mx-auto">
-              The timeline is ready, real milestones will start appearing
-              here as they happen.
-            </p>
-          </div>
-        ) : (
-          <ol className="relative flex flex-col gap-8 border-l border-line pl-7">
-            {milestones.map((m) => (
-              <li key={m.id} className="relative">
-                <span
-                  aria-hidden
-                  className="absolute -left-[33px] top-1.5 h-2.5 w-2.5 rounded-full border-2 border-canvas bg-ink"
-                />
-                <div className="flex flex-wrap items-center gap-2.5 mb-1">
-                  <span className="label-mono text-ink-soft">
-                    {formatDate(m.date)}
-                  </span>
-                  <span className="label-mono rounded-full border border-line-strong px-2 py-0.5 text-ink-soft">
-                    {KIND_LABEL[m.kind]}
-                  </span>
-                </div>
-                <h3 className="text-base font-medium tracking-tight text-ink">
-                  {m.title}
-                </h3>
-                <p className="mt-1 max-w-md text-sm leading-relaxed text-ink-soft">
-                  {m.description}
-                </p>
-              </li>
-            ))}
-          </ol>
-        )}
+        <div className="flex flex-col gap-4 text-sm leading-relaxed text-ink-soft max-w-md">
+          <p>
+            Most businesses don&apos;t lose time because people aren&apos;t
+            working hard enough. They lose time because the process itself
+            depends on someone remembering the next step, chasing a reply,
+            or copying the same data between tools by hand.
+          </p>
+          <p>That&apos;s the part I build to remove.</p>
+          <p>
+            I&apos;m Ifiok Columba, an AI Automation Engineer. I design
+            workflows and AI agents that take over the steps that don&apos;t
+            need a person watching them: routing a lead to the right place,
+            checking a document before it moves forward, deciding what
+            happens next instead of just logging that something happened.
+          </p>
+          <p>
+            I build with n8n for orchestration and AI Agent nodes powered by
+            Gemini and OpenAI for the steps that need real judgment, with
+            Claude when a task calls for more careful reasoning. I think
+            in systems because I built my own from scratch, this site
+            included, down to the AI assistant you can talk to right now.
+            That habit, build it, run it, see where it breaks, shapes how I
+            approach every workflow after.
+          </p>
+          <p>
+            I learn by building, not studying. Every pattern I pick up
+            gets tested against a real workflow before I trust it.
+          </p>
+          <p>
+            What matters most to me isn&apos;t just that a workflow runs
+            once. It&apos;s that it keeps running the way a real team
+            actually works, so it gets trusted and used, not abandoned
+            after the demo.
+          </p>
+        </div>
       </div>
     </section>
   );

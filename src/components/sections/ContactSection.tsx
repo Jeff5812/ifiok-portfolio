@@ -28,13 +28,11 @@ export default function ContactSection() {
             Open for freelance work &amp; full-time roles
           </p>
           <h2 className="text-2xl sm:text-4xl font-medium tracking-tight text-ink max-w-md leading-[1.1]">
-            Have a workflow worth automating, or a product worth shipping?
+            Ready to fix your operations?
           </h2>
           <p className="mt-6 max-w-xl text-base text-ink-soft leading-relaxed">
-            I take on automation builds, AI agent systems, and full-stack
-            product work, as a freelance engagement or a full-time role.
-            If it involves a system that should be smarter than a spreadsheet,
-            let&apos;s talk.
+            If your business is dealing with messy processes, scattered tools,
+            or too much manual work, I can help you fix it.
           </p>
 
           <motion.div

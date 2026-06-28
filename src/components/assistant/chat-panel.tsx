@@ -38,7 +38,6 @@ const START_PROJECT_CHIP = "Start a project →";
 const PROJECT_TYPES = [
   "Workflow automation (n8n)",
   "AI agent system",
-  "Full-stack app",
   "Not sure yet",
 ] as const;
 

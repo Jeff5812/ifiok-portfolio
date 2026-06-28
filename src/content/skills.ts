@@ -13,7 +13,7 @@ export const skillGroups: SkillGroup[] = [
   },
   {
     category: "AI & Agents",
-    items: ["AI Agent nodes", "Gemini", "OpenAI", "Prompt design", "Ollama (local models)", "Qwen2.5"],
+    items: ["AI Agent nodes", "Gemini", "OpenAI", "Claude", "Prompt design", "Qwen2.5"],
   },
   {
     category: "Integrations & Data",

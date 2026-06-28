@@ -50,7 +50,7 @@ export const profile = {
   // Agents section content
   agents: {
     title: "AI Agents",
-    tagline: "Agents that make decisions, take action, and deliver results.",
+    tagline: "Not a chatbot. These agents decide and act. Try the buttons below.",
     blurb:
       "I design AI agents and n8n workflows that automate decision-making, document processing, lead qualification, and operational routing, reducing manual work and increasing execution speed.",
     features: ["LEAD QUALIFICATION", "DOCUMENT PROCESSING", "DECISION AUTOMATION", "WORKFLOW ORCHESTRATION"],

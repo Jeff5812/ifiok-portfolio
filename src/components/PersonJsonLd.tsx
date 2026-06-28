@@ -18,8 +18,6 @@ export default function PersonJsonLd() {
       "n8n",
       "AI agents",
       "Workflow automation",
-      "Next.js",
-      "Full-stack development",
     ],
   };
 

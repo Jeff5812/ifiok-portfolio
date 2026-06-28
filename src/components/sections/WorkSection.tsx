@@ -7,14 +7,12 @@ export default function WorkSection() {
   return (
     <section id="work" className="scroll-mt-16">
       <div>
-        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-12">
-          <div>
-            <p className="label-mono text-ink-soft mb-3">Selected work</p>
-            <h2 className="text-3xl sm:text-5xl font-medium tracking-tight text-ink max-w-xl">
-              Every system I build will land here.
-            </h2>
-          </div>
-          <p className="max-w-sm text-sm text-ink-soft leading-relaxed">
+        <div className="mb-10">
+          <p className="label-mono text-ink-soft mb-3">Selected work</p>
+          <h2 className="text-2xl sm:text-4xl font-medium tracking-tight text-ink mb-4">
+            Every system I build will land here.
+          </h2>
+          <p className="max-w-md text-sm text-ink-soft leading-relaxed">
             Projects are rendered as nodes on a workflow canvas, because
             that&apos;s genuinely how these get built. Each one opens into
             the full problem, process, and outcome.
