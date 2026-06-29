@@ -12,8 +12,10 @@ export const profile = {
 
   headline: "Manual work doesn't scale. The systems that replace it should think for themselves.",
 
-  subhead:
-    "I design AI-powered automation that makes real decisions, not just moves data between tools. Workflows that qualify leads, process documents, and route work without someone babysitting every step. Currently deep in n8n and AI agent orchestration.",
+  subhead: [
+    "I specialize in automating operations for startups and business owners using n8n and AI agent workflows. I streamline manual processes, eliminate repetitive tasks, and build systems that decide and act, not just move data between tools.",
+    "I work across workflow orchestration, AI agent design, and process automation, bringing in Gemini, OpenAI, or Claude wherever a step needs real judgment instead of a fixed script. The assistant on this site is a working example, a system I designed and built myself, not a mockup.",
+  ],
 
   // Used in <head>, OG tags, and the hero eyebrow.
   seoTitle: "Ifiok Columba, AI Automation Engineer",

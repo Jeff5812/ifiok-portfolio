@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 import { profile } from "@/content/profile";
 
-export const alt = "Ifiok Columba, AI Automation Engineer & Full-Stack Builder";
+export const alt = profile.seoTitle;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -53,10 +53,10 @@ export default async function OGImage() {
               maxWidth: 980,
             }}
           >
-            AI Automation Engineer &amp; Full-Stack Builder
+            AI Automation Engineer
           </span>
           <span style={{ fontSize: 24, color: "#6b6f76", maxWidth: 820 }}>
-            {profile.subhead}
+            {profile.seoDescription}
           </span>
         </div>
 

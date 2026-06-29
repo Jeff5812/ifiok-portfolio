@@ -7,7 +7,6 @@ const CONTENT_GROUPS = [
     links: [
       { label: "Featured work", href: "/#work" },
       { label: "All projects", href: "/projects" },
-      { label: "About", href: "/#about" },
       { label: "Now building", href: "/#now" },
     ],
   },

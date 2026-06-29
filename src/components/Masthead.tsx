@@ -129,9 +129,13 @@ export default function Masthead() {
         </h1>
 
         {/* Subheadline */}
-        <p className="text-base text-ink-soft leading-relaxed">
-          {profile.subhead}
-        </p>
+        <div className="space-y-3">
+          {profile.subhead.map((paragraph, i) => (
+            <p key={i} className="text-base text-ink-soft leading-relaxed">
+              {paragraph}
+            </p>
+          ))}
+        </div>
       </motion.div>
     </Card>
   );
