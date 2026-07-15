@@ -25,6 +25,9 @@ until you add it. See "Adding content" below.
 | Styling | Tailwind CSS v4 (CSS-first `@theme` config) |
 | Motion | Framer Motion |
 | Content | Local TypeScript modules (projects, profile, skills, milestones) + MDX (blog) |
+<<<<<<< HEAD
+=======
+| Lead capture | n8n + Google Sheets (webhook) |
 | Icons | lucide-react |
 | Deployment target | Vercel |
 
