@@ -2,6 +2,7 @@ import Masthead from "@/components/Masthead";
 import PortraitCard from "@/components/PortraitCard";
 import Card from "@/components/ui/Card";
 import PageShell from "@/components/ui/PageShell";
+import ServicesSection from "@/components/sections/ServicesSection";
 import AgentsSection from "@/components/sections/AgentsSection";
 import WorkSection from "@/components/sections/WorkSection";
 import NowSection from "@/components/sections/NowSection";
@@ -16,22 +17,27 @@ export default function Home() {
       {/* Card 2: Portrait placeholder */}
       <PortraitCard />
 
-      {/* Card 3: Agents section */}
+      {/* Card 3: Services, what I do, as animated icon buttons into the assistant */}
+      <Card>
+        <ServicesSection />
+      </Card>
+
+      {/* Card 4: Agents section, the live chat demo */}
       <Card>
         <AgentsSection />
       </Card>
 
-      {/* Card 4: Work, workflow canvas + link into the full /projects page */}
+      {/* Card 5: Work, workflow canvas + link into the full /projects page */}
       <Card>
         <WorkSection />
       </Card>
 
-      {/* Card 5: Now section */}
+      {/* Card 6: Now section */}
       <Card>
         <NowSection />
       </Card>
 
-      {/* Card 6: Contact section */}
+      {/* Card 7: Contact section */}
       <Card>
         <ContactSection />
       </Card>
