@@ -2,11 +2,11 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { motion } from "framer-motion";
 import { Menu, X, Sparkles } from "lucide-react";
 import { profile } from "@/content/profile";
 import Card from "@/components/ui/Card";
+import BrandMark from "@/components/ui/BrandMark";
 import { transition } from "@/lib/motion";
 import { openAssistant } from "@/components/assistant/open-assistant";
 
@@ -28,15 +28,14 @@ export default function Masthead() {
     <Card className="space-y-6">
       {/* Top row: portrait avatar, availability, menu */}
       <div className="flex items-center justify-between">
-        <div className="relative h-10 w-10 rounded-full overflow-hidden flex-shrink-0">
-          <Image
-            src="/ifiok-portrait.png"
-            alt="Ifiok Columba"
-            fill
-            sizes="40px"
-            className="object-cover object-[50%_26%]"
-          />
-        </div>
+        <button
+          type="button"
+          onClick={() => openAssistant()}
+          aria-label="Open the AI assistant"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full transition-opacity hover:opacity-80"
+        >
+          <BrandMark size={40} />
+        </button>
 
         {/* Availability indicator */}
         <motion.div
