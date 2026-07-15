@@ -38,7 +38,7 @@ export default function ServicesSection() {
             <motion.button
               key={item.label}
               type="button"
-              onClick={() => openAssistant(item.prompt)}
+              onClick={() => openAssistant(item.prompt, "services")}
               aria-label={`Ask the AI assistant about ${item.label}`}
               initial={{ opacity: 0, y: 14 }}
               whileInView={{ opacity: 1, y: 0 }}

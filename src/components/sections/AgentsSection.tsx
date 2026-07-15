@@ -39,7 +39,7 @@ export default function AgentsSection() {
         >
           <button
             type="button"
-            onClick={() => openAssistant()}
+            onClick={() => openAssistant(undefined, "agents")}
             aria-label="Open the AI assistant"
             className="block w-full border-b border-line px-4 py-3 text-left transition-colors hover:bg-canvas"
           >
@@ -59,7 +59,7 @@ export default function AgentsSection() {
                   <button
                     key={action}
                     type="button"
-                    onClick={() => openAssistant(action)}
+                    onClick={() => openAssistant(action, "agents")}
                     aria-label={`Ask the AI assistant: ${action}`}
                     className="block w-full rounded-lg border border-line px-3 py-2 text-left text-sm text-ink/80 transition-colors hover:border-line-strong hover:bg-canvas hover:text-ink"
                   >

@@ -24,14 +24,19 @@ type ChatPanelProps = {
    * clicked elsewhere on the page opened this panel with a specific ask). */
   pendingPrompt?: string | null;
   onPendingPromptConsumed?: () => void;
+  context?: string;
 };
 
-const QUICK_REPLIES = [
+const DEFAULT_QUICK_REPLIES = [
   "What's your tech stack?",
   "What problems can AI agents solve for a business?",
   "Are you available for freelance work?",
   "What's the best way to start working together?",
 ] as const;
+
+const AGENTS_QUICK_REPLIES = ["Route this lead", "Score eligibility", "Summarize document", "Process application"] as const;
+
+const SERVICES_QUICK_REPLIES = ["Tell me about Lead Qualification", "How would you automate Document Processing", "Decision Automation examples"] as const;
 
 const START_PROJECT_CHIP = "Start a project →";
 
@@ -59,6 +64,7 @@ export default function ChatPanel({
   onSubmitLead,
   pendingPrompt,
   onPendingPromptConsumed,
+  context,
 }: ChatPanelProps) {
   const [messages, setMessages] = useState<ChatMessage[]>(
     initialMessages ?? [
@@ -81,7 +87,11 @@ export default function ChatPanel({
   });
 
   const canSend = value.trim().length > 0 && !busy;
-  const chips = useMemo(() => [...QUICK_REPLIES, START_PROJECT_CHIP], []);
+  const chips = useMemo(() => {
+    const base = context === "agents" ? [...AGENTS_QUICK_REPLIES] : context === "services" ? [...SERVICES_QUICK_REPLIES] : [...DEFAULT_QUICK_REPLIES];
+    // ensure START_PROJECT_CHIP is last
+    return [...base, START_PROJECT_CHIP] as string[];
+  }, [context]);
 
   useEffect(() => {
     if (!pendingPrompt) return;
@@ -95,6 +105,19 @@ export default function ChatPanel({
 
   function pushMessage(role: Role, content: string) {
     setMessages((m) => [...m, { id: uid(), role, content }]);
+  }
+
+  function resetChat() {
+    setMessages(initialMessages ?? [
+      {
+        id: uid(),
+        role: "assistant",
+        content: "How can I help you today?",
+      },
+    ]);
+    setLeadStatus("idle");
+    setLeadError(null);
+    setValue("");
   }
 
   async function send(text: string) {
@@ -152,19 +175,30 @@ export default function ChatPanel({
   return (
     <div className="w-full overflow-hidden rounded-2xl border border-line bg-canvas-raised shadow-sm">
       <div className="flex items-center justify-between border-b border-line px-4 py-3">
-        <p className="text-sm font-medium text-ink">{title}</p>
-        <span className="label-mono text-ink-soft">{busy ? "Thinking" : "Ready"}</span>
+        <div>
+          <p className="text-sm font-medium text-ink">{title}</p>
+          <p className="mt-1 text-xs text-ink-soft">Ask me anything about the work on this site.</p>
+        </div>
+        <div className="flex items-center gap-3">
+          <span className="label-mono text-ink-soft">{busy ? "Thinking" : "Ready"}</span>
+          <button type="button" onClick={resetChat} className="text-ink-soft hover:text-ink">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-4 w-4">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 6h18M8 6v12a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V6" />
+            </svg>
+          </button>
+        </div>
       </div>
 
-      <div className="max-h-[340px] space-y-3 overflow-auto px-4 py-4">
+      <div className="max-h-[340px] space-y-4 overflow-auto px-4 py-4">
         {messages.map((m) => (
           <div key={m.id} className={m.role === "user" ? "flex justify-end" : "flex justify-start"}>
             <div
               className={
                 m.role === "user"
-                  ? "max-w-[85%] rounded-2xl bg-ink px-3 py-2 text-sm text-canvas"
-                  : "max-w-[85%] rounded-2xl border border-line bg-canvas px-3 py-2 text-sm text-ink/80"
+                  ? "max-w-[85%] rounded-2xl bg-ink px-3 py-3 text-sm text-canvas"
+                  : "max-w-[85%] rounded-2xl bg-canvas px-3 py-3 text-sm text-ink/80"
               }
+              style={{ boxShadow: m.role === "assistant" ? "none" : undefined }}
             >
               {m.content}
             </div>

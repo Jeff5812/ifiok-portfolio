@@ -2,15 +2,15 @@
 
 export const OPEN_ASSISTANT_EVENT = "columba:assistant:open";
 
-export type OpenAssistantDetail = { prompt?: string };
+export type OpenAssistantDetail = { prompt?: string; context?: string };
 
 /**
  * Opens the floating assistant. Pass a prompt to have it sent immediately
  * (e.g. clicking a specific quick-action), or omit it to just open the panel.
  */
-export function openAssistant(prompt?: string) {
+export function openAssistant(prompt?: string, context?: string) {
   window.dispatchEvent(
-    new CustomEvent<OpenAssistantDetail>(OPEN_ASSISTANT_EVENT, { detail: { prompt } }),
+    new CustomEvent<OpenAssistantDetail>(OPEN_ASSISTANT_EVENT, { detail: { prompt, context } }),
   );
 }
 
