@@ -83,32 +83,6 @@ export default function AgentsSection() {
           </button>
         </motion.div>
 
-        {agents.blurb && (
-          <motion.p
-            initial={{ opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={viewportOnce}
-            transition={transition(0.12)}
-            className="mb-6 max-w-md text-sm text-ink-soft leading-relaxed"
-          >
-            {agents.blurb}
-          </motion.p>
-        )}
-
-        <ul className="space-y-3">
-          {agents.features.map((feature: string, i: number) => (
-            <motion.li
-              key={feature}
-              initial={{ opacity: 0, x: -8 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={viewportOnce}
-              transition={transition(0.16 + i * 0.06)}
-              className="label-mono text-ink-soft"
-            >
-              {feature}
-            </motion.li>
-          ))}
-        </ul>
       </div>
     </section>
   );

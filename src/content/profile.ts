@@ -14,7 +14,8 @@ export const profile = {
 
   subhead: [
     "I specialize in automating operations for startups and business owners using n8n and AI agent workflows. I streamline manual processes, eliminate repetitive tasks, and build systems that decide and act, not just move data between tools.",
-    "I work across workflow orchestration, AI agent design, and process automation, bringing in Gemini, OpenAI, or Claude wherever a step needs real judgment instead of a fixed script. The assistant on this site is a working example, a system I designed and built myself, not a mockup.",
+    "I work across workflow orchestration, AI agent design, and process automation, bringing in Gemini, OpenAI, or Claude wherever a step needs real judgment instead of a fixed script.",
+    "Most teams don't struggle because they lack effort, they struggle because their processes are disconnected, unclear, and overly manual. That's what I fix.",
   ],
 
   // Used in <head>, OG tags, and the hero eyebrow.
@@ -49,13 +50,41 @@ export const profile = {
     description: "Systems and apps that automate decision-making, routing, and processing, built with n8n and AI models.",
   },
 
-  // Agents section content
+  // Services section content: what I do, shown as animated icon buttons
+  // that route straight into the assistant with a matching prompt.
+  services: {
+    title: "My Services",
+    tagline: "What I build, and the systems behind each one.",
+    items: [
+      {
+        label: "Lead Qualification",
+        description: "Score and route inbound leads the moment they land.",
+        prompt: "Route this lead",
+      },
+      {
+        label: "Document Processing",
+        description: "Extract, validate, and summarize documents automatically.",
+        prompt: "Summarize document",
+      },
+      {
+        label: "Decision Automation",
+        description: "Rule-based logic or AI judgment, applied where each one fits.",
+        prompt: "Score eligibility",
+      },
+      {
+        label: "Workflow Orchestration",
+        description: "Systems that connect your tools and move work forward on their own.",
+        prompt: "Process application",
+      },
+    ],
+  },
+
+  // Agents section content: the live chat demo intro.
   agents: {
     title: "AI Agents",
-    tagline: "Not a chatbot. These agents decide and act. Try the buttons below.",
-    blurb:
-      "I design AI agents and n8n workflows that automate decision-making, document processing, lead qualification, and operational routing, reducing manual work and increasing execution speed.",
-    features: ["LEAD QUALIFICATION", "DOCUMENT PROCESSING", "DECISION AUTOMATION", "WORKFLOW ORCHESTRATION"],
+    tagline: "These aren't scripted replies, they're decisions. Try one below.",
+    blurb: "",
+    features: [] as string[],
   },
 
   stats: [
