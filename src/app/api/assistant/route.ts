@@ -41,35 +41,50 @@ function strictSystemPrompt() {
     "",
     "SITE CONTEXT:",
     assistantContextText(),
+    "",
+    "<known_facts>",
+    // Provide a short, machine-readable facts block derived from profile and projects.
+    // The assistant must only state facts present here. For anything not documented,
+    // reply: 'Not documented yet, I'll have Ifiok follow up.'
+    assistantContextText(),
+    "</known_facts>",
+    "",
+    "RULE: For very short or ambiguous messages (about 4 words or fewer), ask ONE short clarifying question instead of guessing. Do not re-greet or make assumptions.",
   ].join("\n");
 }
 
 async function callOpenAI(messages: ChatMessage[]) {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) throw new Error("OPENAI_API_KEY is not set");
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 12_000);
+  try {
+    const res = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: process.env.OPENAI_MODEL || "gpt-4o-mini",
+        messages,
+        temperature: 0.2,
+      }),
+      signal: controller.signal,
+    });
 
-  const res = await fetch("https://api.openai.com/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      model: process.env.OPENAI_MODEL || "gpt-4o-mini",
-      messages,
-      temperature: 0.2,
-    }),
-  });
+    if (!res.ok) {
+      const text = await res.text();
+      throw new Error(`OpenAI error ${res.status}: ${text}`);
+    }
 
-  if (!res.ok) {
-    const text = await res.text();
-    throw new Error(`OpenAI error ${res.status}: ${text}`);
+    const json = (await res.json()) as {
+      choices?: Array<{ message?: { content?: string } }>;
+    };
+    return json.choices?.[0]?.message?.content?.trim() || "";
+  } finally {
+    clearTimeout(timeout);
   }
-
-  const json = (await res.json()) as {
-    choices?: Array<{ message?: { content?: string } }>;
-  };
-  return json.choices?.[0]?.message?.content?.trim() || "";
 }
 
 async function callGemini(messages: ChatMessage[]) {
@@ -83,27 +98,34 @@ async function callGemini(messages: ChatMessage[]) {
 
   const systemText = messages.find((m) => m.role === "system")?.content ?? "";
 
-  const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/${process.env.GEMINI_MODEL || "gemini-1.5-flash"}:generateContent?key=${apiKey}`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents: [{ role: "user", parts: [{ text: `${systemText}\n\n${userText}` }] }],
-        generationConfig: { temperature: 0.2 },
-      }),
-    },
-  );
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 12_000);
+  try {
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${process.env.GEMINI_MODEL || "gemini-1.5-flash"}:generateContent?key=${apiKey}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ role: "user", parts: [{ text: `${systemText}\n\n${userText}` }] }],
+          generationConfig: { temperature: 0.2 },
+        }),
+        signal: controller.signal,
+      },
+    );
 
-  if (!res.ok) {
-    const text = await res.text();
-    throw new Error(`Gemini error ${res.status}: ${text}`);
+    if (!res.ok) {
+      const text = await res.text();
+      throw new Error(`Gemini error ${res.status}: ${text}`);
+    }
+
+    const json = (await res.json()) as {
+      candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }>;
+    };
+    return json.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || "";
+  } finally {
+    clearTimeout(timeout);
   }
-
-  const json = (await res.json()) as {
-    candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }>;
-  };
-  return json.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || "";
 }
 
 export async function POST(req: Request) {
@@ -127,10 +149,16 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Missing message" }, { status: 400 });
   }
 
+  // Short/ambiguous messages should trigger a single clarifying question.
+  const shortWordCount = message.split(/\s+/).filter(Boolean).length;
+  if (shortWordCount <= 4) {
+    return NextResponse.json({ content: "Could you say a bit more about that, please?" });
+  }
+
   const messages: ChatMessage[] = [
     { role: "system", content: strictSystemPrompt() },
     ...history
-      .slice(-10)
+      .slice(-8)
       .map((m) => ({ role: m.role, content: String(m.content ?? "") }))
       .filter((m) => m.content.trim().length > 0),
     { role: "user", content: message },

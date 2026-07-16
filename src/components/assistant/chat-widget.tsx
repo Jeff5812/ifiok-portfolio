@@ -58,11 +58,13 @@ function mockReply(prompt: string) {
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
   const [pendingPrompt, setPendingPrompt] = useState<string | null>(null);
+  const [context, setContext] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     function onOpen(e: Event) {
       const detail = (e as CustomEvent<OpenAssistantDetail>).detail;
       setOpen(true);
+      setContext(detail?.context);
       if (detail?.prompt) setPendingPrompt(detail.prompt);
     }
     window.addEventListener(OPEN_ASSISTANT_EVENT, onOpen);
@@ -125,6 +127,7 @@ export default function ChatWidget() {
               onSend={onSend}
               onSubmitLead={onSubmitLead}
               pendingPrompt={pendingPrompt}
+              context={context}
               onPendingPromptConsumed={() => setPendingPrompt(null)}
             />
           </motion.div>

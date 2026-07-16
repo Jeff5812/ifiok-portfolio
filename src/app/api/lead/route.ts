@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
 
 type LeadPayload = {
   name: string;
@@ -7,14 +6,6 @@ type LeadPayload = {
   projectType: string;
   message: string;
 };
-
-function getSupabaseAdmin() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
-  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-  if (!url || !serviceKey) return null;
-  return createClient(url, serviceKey, { auth: { persistSession: false } });
-}
 
 export async function POST(req: Request) {
   const body = (await req.json().catch(() => null)) as Partial<LeadPayload> | null;
@@ -27,41 +18,30 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Missing fields" }, { status: 400 });
   }
 
-  const supabase = getSupabaseAdmin();
-  if (!supabase) {
+  const webhookUrl = process.env.N8N_WEBHOOK_URL;
+  if (!webhookUrl) {
     return NextResponse.json(
-      {
-        error:
-          "Lead capture is not configured. Set NEXT_PUBLIC_SUPABASE_URL (or SUPABASE_URL) and SUPABASE_SERVICE_ROLE_KEY.",
-      },
+      { error: "Lead capture is not configured. Set N8N_WEBHOOK_URL." },
       { status: 503 },
     );
   }
 
-  const insert = await supabase.from("leads").insert({
-    name,
-    email,
-    project_type: projectType,
-    message,
-  });
+  try {
+    const res = await fetch(webhookUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, email, projectType, message }),
+    });
 
-  if (insert.error) {
-    return NextResponse.json({ error: insert.error.message }, { status: 500 });
-  }
-
-  const webhookUrl = process.env.N8N_WEBHOOK_URL;
-  if (webhookUrl) {
-    try {
-      await fetch(webhookUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, projectType, message }),
-      });
-    } catch {
-      // no-op: lead is already stored in Supabase
+    if (!res.ok) {
+      const text = await res.text().catch(() => "");
+      console.error("n8n webhook returned non-ok status:", res.status, text);
+      return NextResponse.json({ error: "Failed to submit lead to webhook." }, { status: 500 });
     }
+  } catch (err) {
+    console.error("n8n webhook request failed:", err);
+    return NextResponse.json({ error: "Failed to submit lead to webhook." }, { status: 500 });
   }
 
   return NextResponse.json({ ok: true });
 }
-
