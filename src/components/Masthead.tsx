@@ -138,5 +138,4 @@ export default function Masthead() {
       </motion.div>
     </Card>
   );
-  );
 }
