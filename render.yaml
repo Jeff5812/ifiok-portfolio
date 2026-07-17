@@ -1,0 +1,80 @@
+# Render Blueprint for the Columba n8n stack.
+# Deploy: Render Dashboard -> New -> Blueprint -> point at the repo/folder
+# containing this file. Render provisions both services and wires the
+# DATABASE_URL automatically, no manual connection string needed.
+#
+# Persistence note: n8n's workflow/credential data lives in the managed
+# Postgres database below, not on disk, so this works on Render's free
+# instance type with no persistent disk required. The only cost of the
+# free tier is the web service spinning down after ~15 min idle (cold
+# start delay on the next webhook call). Upgrade n8n's plan to "Starter"
+# ($7/mo) if the assistant needs to respond instantly with no cold start.
+
+databases:
+  - name: columba-n8n-db
+    plan: free
+    databaseName: n8n
+    user: n8n
+
+services:
+  - type: web
+    name: columba-n8n
+    runtime: image
+    image:
+      url: docker.io/n8nio/n8n:latest
+    plan: free
+    envVars:
+      - key: DB_TYPE
+        value: postgresdb
+      - key: DB_POSTGRESDB_HOST
+        fromDatabase: { name: columba-n8n-db, property: host }
+      - key: DB_POSTGRESDB_PORT
+        fromDatabase: { name: columba-n8n-db, property: port }
+      - key: DB_POSTGRESDB_DATABASE
+        fromDatabase: { name: columba-n8n-db, property: database }
+      - key: DB_POSTGRESDB_USER
+        fromDatabase: { name: columba-n8n-db, property: user }
+      - key: DB_POSTGRESDB_PASSWORD
+        fromDatabase: { name: columba-n8n-db, property: password }
+
+      - key: N8N_PROTOCOL
+        value: https
+      - key: N8N_PORT
+        value: "10000"
+      - key: N8N_HOST
+        fromService: { type: web, name: columba-n8n, property: host }
+      - key: WEBHOOK_URL
+        fromService: { type: web, name: columba-n8n, property: hostport }
+      - key: N8N_EDITOR_BASE_URL
+        fromService: { type: web, name: columba-n8n, property: hostport }
+      - key: GENERIC_TIMEZONE
+        value: Africa/Lagos
+
+      - key: N8N_BASIC_AUTH_ACTIVE
+        value: "true"
+      - key: N8N_BASIC_AUTH_USER
+        sync: false
+      - key: N8N_BASIC_AUTH_PASSWORD
+        sync: false
+      - key: N8N_ENCRYPTION_KEY
+        generateValue: true
+
+      # Read directly by the Columba Assistant workflow's Code nodes.
+      - key: ASSISTANT_PROVIDER
+        value: gemini
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: OPENAI_MODEL
+        value: gpt-4o-mini
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GEMINI_MODEL
+        value: gemini-1.5-flash
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: ANTHROPIC_MODEL
+        value: claude-sonnet-4-6
+      - key: TELEGRAM_NOTIFY_CHAT_ID
+        sync: false
+      - key: N8N_WEBHOOK_SECRET
+        sync: false
