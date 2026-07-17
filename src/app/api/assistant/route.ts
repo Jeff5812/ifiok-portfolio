@@ -1,10 +1,12 @@
 import { NextResponse } from "next/server";
-import { assistantContextText } from "@/content/assistant-context";
 
-type ChatMessage = { role: "system" | "user" | "assistant"; content: string };
+// All assistant logic (intent routing, demo calculations, AI Q&A) now lives
+// in the n8n workflow "Columba Assistant - Chat", hosted on Oracle Cloud.
+// This route is a thin, rate-limited proxy so the n8n webhook URL and any
+// future auth header never reach the browser.
 
 const MAX_REQUESTS_PER_WINDOW = 15;
-const WINDOW_MS = 60_000; // 1 minute
+const WINDOW_MS = 60_000;
 
 type Bucket = { resetAt: number; count: number };
 const buckets = new Map<string, Bucket>();
@@ -20,112 +22,14 @@ function rateLimit(key: string) {
   const existing = buckets.get(key);
   if (!existing || now > existing.resetAt) {
     buckets.set(key, { resetAt: now + WINDOW_MS, count: 1 });
-    return { ok: true as const, remaining: MAX_REQUESTS_PER_WINDOW - 1 };
+    return { ok: true as const };
   }
   if (existing.count >= MAX_REQUESTS_PER_WINDOW) {
     return { ok: false as const, retryAfterMs: existing.resetAt - now };
   }
   existing.count += 1;
   buckets.set(key, existing);
-  return { ok: true as const, remaining: MAX_REQUESTS_PER_WINDOW - existing.count };
-}
-
-function strictSystemPrompt() {
-  return [
-    "You are Columba AI Assistant for a portfolio site.",
-    "Your ONLY job is to answer questions about Ifiok Columba's work, skills, stack, journey, availability, and how to get in touch.",
-    "Be concise, helpful, and professional. Use the provided SITE CONTEXT as the source of truth.",
-    "If asked for anything unrelated (general knowledge, politics, medical, legal, personal data beyond the context, etc.), politely refuse and redirect to portfolio-related help.",
-    "Do not invent projects, companies, or achievements.",
-    "Never use the em dash character (—) in your responses. Use a comma, period, or rephrase instead.",
-    "",
-    "SITE CONTEXT:",
-    assistantContextText(),
-    "",
-    "<known_facts>",
-    // Provide a short, machine-readable facts block derived from profile and projects.
-    // The assistant must only state facts present here. For anything not documented,
-    // reply: 'Not documented yet, I'll have Ifiok follow up.'
-    assistantContextText(),
-    "</known_facts>",
-    "",
-    "RULE: For very short or ambiguous messages (about 4 words or fewer), ask ONE short clarifying question instead of guessing. Do not re-greet or make assumptions.",
-  ].join("\n");
-}
-
-async function callOpenAI(messages: ChatMessage[]) {
-  const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) throw new Error("OPENAI_API_KEY is not set");
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 12_000);
-  try {
-    const res = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: process.env.OPENAI_MODEL || "gpt-4o-mini",
-        messages,
-        temperature: 0.2,
-      }),
-      signal: controller.signal,
-    });
-
-    if (!res.ok) {
-      const text = await res.text();
-      throw new Error(`OpenAI error ${res.status}: ${text}`);
-    }
-
-    const json = (await res.json()) as {
-      choices?: Array<{ message?: { content?: string } }>;
-    };
-    return json.choices?.[0]?.message?.content?.trim() || "";
-  } finally {
-    clearTimeout(timeout);
-  }
-}
-
-async function callGemini(messages: ChatMessage[]) {
-  const apiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
-  if (!apiKey) throw new Error("GEMINI_API_KEY (or GOOGLE_API_KEY) is not set");
-
-  const userText = messages
-    .filter((m) => m.role !== "system")
-    .map((m) => `${m.role.toUpperCase()}: ${m.content}`)
-    .join("\n\n");
-
-  const systemText = messages.find((m) => m.role === "system")?.content ?? "";
-
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 12_000);
-  try {
-    const res = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/${process.env.GEMINI_MODEL || "gemini-1.5-flash"}:generateContent?key=${apiKey}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [{ role: "user", parts: [{ text: `${systemText}\n\n${userText}` }] }],
-          generationConfig: { temperature: 0.2 },
-        }),
-        signal: controller.signal,
-      },
-    );
-
-    if (!res.ok) {
-      const text = await res.text();
-      throw new Error(`Gemini error ${res.status}: ${text}`);
-    }
-
-    const json = (await res.json()) as {
-      candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }>;
-    };
-    return json.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || "";
-  } finally {
-    clearTimeout(timeout);
-  }
+  return { ok: true as const };
 }
 
 export async function POST(req: Request) {
@@ -134,66 +38,61 @@ export async function POST(req: Request) {
   if (!limited.ok) {
     return NextResponse.json(
       { error: "Rate limit exceeded" },
-      { status: 429, headers: { "Retry-After": Math.ceil(limited.retryAfterMs / 1000).toString() } },
+      { status: 429, headers: { "Retry-After": Math.ceil((limited.retryAfterMs ?? 0) / 1000).toString() } },
     );
   }
 
   const body = (await req.json().catch(() => null)) as
-    | { message?: string; history?: Array<{ role: "user" | "assistant"; content: string }> }
+    | { message?: string; history?: Array<{ role: "user" | "assistant"; content: string }>; context?: string }
     | null;
 
   const message = body?.message?.trim();
-  const history = body?.history ?? [];
-
   if (!message) {
     return NextResponse.json({ error: "Missing message" }, { status: 400 });
   }
 
-  // Short/ambiguous messages should trigger a single clarifying question.
-  const shortWordCount = message.split(/\s+/).filter(Boolean).length;
-  if (shortWordCount <= 4) {
-    return NextResponse.json({ content: "Could you say a bit more about that, please?" });
+  const webhookUrl = process.env.N8N_CHAT_WEBHOOK_URL;
+  if (!webhookUrl) {
+    return NextResponse.json(
+      { error: "Assistant is not configured. Set N8N_CHAT_WEBHOOK_URL." },
+      { status: 503 },
+    );
   }
-
-  const messages: ChatMessage[] = [
-    { role: "system", content: strictSystemPrompt() },
-    ...history
-      .slice(-8)
-      .map((m) => ({ role: m.role, content: String(m.content ?? "") }))
-      .filter((m) => m.content.trim().length > 0),
-    { role: "user", content: message },
-  ];
 
   try {
-    const provider = (process.env.ASSISTANT_PROVIDER || "").toLowerCase();
-    const hasOpenAI = Boolean(process.env.OPENAI_API_KEY);
-    const hasGemini = Boolean(process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY);
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 15_000);
+    const res = await fetch(webhookUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...(process.env.N8N_WEBHOOK_SECRET
+          ? { "x-webhook-secret": process.env.N8N_WEBHOOK_SECRET }
+          : {}),
+      },
+      body: JSON.stringify({
+        message,
+        history: body?.history ?? [],
+        context: body?.context ?? null,
+      }),
+      signal: controller.signal,
+    }).finally(() => clearTimeout(timeout));
 
-    const content =
-      provider === "gemini"
-        ? await callGemini(messages)
-        : provider === "openai"
-          ? await callOpenAI(messages)
-          : hasOpenAI
-            ? await callOpenAI(messages)
-            : hasGemini
-              ? await callGemini(messages)
-              : "";
-
-    if (!content) {
-      return NextResponse.json(
-        {
-          error:
-            "Assistant is not configured. Set OPENAI_API_KEY or GEMINI_API_KEY in .env.local.",
-        },
-        { status: 503 },
-      );
+    if (!res.ok) {
+      const text = await res.text().catch(() => "");
+      console.error("n8n chat webhook error:", res.status, text);
+      return NextResponse.json({ error: "Assistant request failed." }, { status: 502 });
     }
 
-    return NextResponse.json({ content });
+    const data = (await res.json().catch(() => null)) as { content?: string } | null;
+    if (!data?.content) {
+      return NextResponse.json({ error: "Assistant returned an empty response." }, { status: 502 });
+    }
+
+    return NextResponse.json({ content: data.content });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Unknown error";
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error("n8n chat webhook request failed:", message);
+    return NextResponse.json({ error: "Assistant is temporarily unavailable." }, { status: 500 });
   }
 }
-
