@@ -18,10 +18,12 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Missing fields" }, { status: 400 });
   }
 
-  const webhookUrl = process.env.N8N_WEBHOOK_URL;
+  // Points at the n8n "Columba Assistant - Lead Capture" workflow's
+  // Webhook node, hosted on Oracle Cloud (see N8N_LEAD_WEBHOOK_URL in .env).
+  const webhookUrl = process.env.N8N_LEAD_WEBHOOK_URL || process.env.N8N_WEBHOOK_URL;
   if (!webhookUrl) {
     return NextResponse.json(
-      { error: "Lead capture is not configured. Set N8N_WEBHOOK_URL." },
+      { error: "Lead capture is not configured. Set N8N_LEAD_WEBHOOK_URL." },
       { status: 503 },
     );
   }
@@ -29,17 +31,22 @@ export async function POST(req: Request) {
   try {
     const res = await fetch(webhookUrl, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        ...(process.env.N8N_WEBHOOK_SECRET
+          ? { "x-webhook-secret": process.env.N8N_WEBHOOK_SECRET }
+          : {}),
+      },
       body: JSON.stringify({ name, email, projectType, message }),
     });
 
     if (!res.ok) {
       const text = await res.text().catch(() => "");
-      console.error("n8n webhook returned non-ok status:", res.status, text);
+      console.error("n8n lead webhook returned non-ok status:", res.status, text);
       return NextResponse.json({ error: "Failed to submit lead to webhook." }, { status: 500 });
     }
   } catch (err) {
-    console.error("n8n webhook request failed:", err);
+    console.error("n8n lead webhook request failed:", err);
     return NextResponse.json({ error: "Failed to submit lead to webhook." }, { status: 500 });
   }
 
