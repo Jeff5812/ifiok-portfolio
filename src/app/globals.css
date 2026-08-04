@@ -1,0 +1,93 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --font-sans: Inter, "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: #0b0d12;
+  color: #f3f4f6;
+  font-family: var(--font-sans);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+::selection {
+  background: rgba(255, 61, 110, 0.35);
+  color: #fff;
+}
+
+.label-mono {
+  font-family: var(--font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+}
+
+.grad-text {
+  background: linear-gradient(90deg, #ff3d6e 0%, #ff6a4d 60%, #ff8a3d 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.btn-primary {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.btn-primary::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(90deg, #ff3d6e 0%, #ff6a4d 60%, #ff8a3d 100%);
+  transition: transform 0.35s ease;
+}
+.btn-primary:hover::before {
+  transform: scale(1.06);
+}
+.btn-primary:active::before {
+  transform: scale(0.97);
+}
+
+.btn-ghost {
+  transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.15s ease;
+}
+.btn-ghost:hover {
+  border-color: #3a4152;
+  background-color: rgba(255, 255, 255, 0.03);
+}
+.btn-ghost:active {
+  transform: scale(0.97);
+}
+
+.focus-ring:focus-visible {
+  outline: 2px solid #ff6a4d;
+  outline-offset: 2px;
+}
+
+/* faint circuit-board backdrop used behind the hero portrait */
+.circuit-bg {
+  background-image:
+    linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+.scrollbar-none::-webkit-scrollbar { display: none; }
+.scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
