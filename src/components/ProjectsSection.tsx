@@ -23,7 +23,7 @@ export default function ProjectsSection({
         <div className="mb-10 flex flex-wrap items-end justify-between gap-4 md:mb-12">
           <div>
             <div className="label-mono text-brand-from">Projects</div>
-            <h2 className="mt-2 text-3xl font-extrabold tracking-tight md:text-4xl">Things I&apos;ve built</h2>
+            <h2 className="mt-2 text-3xl font-extrabold tracking-tight md:text-4xl">Things I have built</h2>
           </div>
           {showViewAll && (
             <Link

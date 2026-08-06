@@ -28,7 +28,7 @@ export default function Hero({ onOpenChat }: { onOpenChat: (intent?: string) => 
           </h1>
 
           <p className="mt-5 max-w-md text-base leading-relaxed text-inkSoft sm:text-lg">
-            I&apos;m Ifiok Columba. I design and build AI agents, workflows,
+            I am Ifiok Columba. I design and build AI agents, workflows,
             and integrations that take repetitive manual work off your
             team&apos;s plate, so people spend less time on busywork and
             more time on what actually needs a human.
