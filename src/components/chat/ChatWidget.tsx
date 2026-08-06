@@ -194,6 +194,7 @@ export default function ChatWidget({
             bottom: "max(96px, calc(env(safe-area-inset-bottom) + 92px))",
             right: "max(16px, env(safe-area-inset-right))",
             left: "max(16px, env(safe-area-inset-left))",
+            maxHeight: "calc(100vh - 140px)",
             zIndex: 2147482999,
           }}
           className="mx-auto flex h-[560px] max-w-sm flex-col overflow-hidden rounded-2xl border border-line bg-panel shadow-2xl sm:left-auto sm:w-[92vw]"
