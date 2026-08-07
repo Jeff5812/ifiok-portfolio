@@ -4,6 +4,8 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 
 export default function About() {
+  const showCertification = false; // Set to true once you have a certificate image ready.
+
   return (
     <div className="mx-auto max-w-2xl px-6 py-20">
       <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
@@ -42,22 +44,24 @@ export default function About() {
         </div>
       </motion.div>
 
-      <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.4 }}
-        className="clear-both mt-14"
-      >
-        <div className="label-mono text-brand-from">Certification</div>
-        <div className="mt-4 flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-line bg-panel/40 px-6 py-14 text-center">
-          <span className="label-mono text-inkSoft">Certificate coming soon</span>
-          <span className="max-w-xs text-xs text-inkSoft">
-            This slot is reserved and sized for a certificate image. Drop it in
-            public/certification.png and it renders here automatically.
-          </span>
-        </div>
-      </motion.div>
+      {showCertification && (
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.4 }}
+          className="clear-both mt-14"
+        >
+          <div className="label-mono text-brand-from">Certification</div>
+          <div className="mt-4 flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-line bg-panel/40 px-6 py-14 text-center">
+            <span className="label-mono text-inkSoft">Certificate coming soon</span>
+            <span className="max-w-xs text-xs text-inkSoft">
+              This slot is reserved and sized for a certificate image. Drop it in
+              public/certification.png and it renders here automatically.
+            </span>
+          </div>
+        </motion.div>
+      )}
     </div>
   );
 }
