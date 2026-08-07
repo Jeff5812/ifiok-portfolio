@@ -1,10 +1,10 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { projects as allProjects } from "@/content/projects";
 import { ToolChip } from "./ToolChip";
+import { ImageLightbox } from "./ImageLightbox";
 
 export default function ProjectsSection({
   onOpenChat,
@@ -47,15 +47,11 @@ export default function ProjectsSection({
             >
               {/* On mobile, image always comes first */}
               <div className={i % 2 === 1 ? "md:order-2" : ""}>
-                <div className="group relative aspect-video w-full overflow-hidden rounded-2xl border border-line bg-panel2">
-                  <Image
-                    src={p.screenshot}
-                    alt={`${p.title} — n8n workflow canvas`}
-                    fill
-                    sizes="(min-width: 768px) 576px, 92vw"
-                    className="object-cover object-left-top transition-transform duration-500 group-hover:scale-105"
-                  />
-                </div>
+                <ImageLightbox
+                  src={p.screenshot}
+                  alt={`${p.title} — n8n workflow canvas`}
+                  className="aspect-video"
+                />
               </div>
 
               <div className={i % 2 === 1 ? "md:order-1" : ""}>
@@ -68,29 +64,48 @@ export default function ProjectsSection({
                   ))}
                 </div>
 
-                <dl className="mt-6 space-y-4 text-sm">
+                <div className="mt-6 space-y-4 text-sm">
                   <div>
-                    <dt className="label-mono text-brand-from">Problem</dt>
-                    <dd className="mt-1 text-inkSoft">{p.problem}</dd>
+                    <div className="label-mono text-brand-from">Problem</div>
+                    <p className="mt-1 text-inkSoft">{p.problem}</p>
                   </div>
-                  <div>
-                    <dt className="label-mono text-brand-from">Solution</dt>
-                    <dd className="mt-1 text-inkSoft">{p.solution}</dd>
-                  </div>
-                  <div>
-                    <dt className="label-mono text-brand-from">Outcome</dt>
-                    <dd className="mt-1 text-inkSoft">{p.outcome}</dd>
-                  </div>
-                </dl>
 
-                {p.demoInChat && (
-                  <button
-                    onClick={() => onOpenChat(`project:${p.slug}`)}
-                    className="btn-ghost focus-ring mt-6 rounded-full border border-line px-4 py-2 text-xs font-medium text-ink"
-                  >
-                    💬 Ask the assistant about this
-                  </button>
-                )}
+                  <div>
+                    <div className="label-mono text-brand-from">Key Features</div>
+                    <ul className="mt-1.5 space-y-1.5">
+                      {p.keyFeatures.map((f) => (
+                        <li key={f} className="flex gap-2 text-inkSoft">
+                          <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-brand-from" />
+                          <span>{f}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div>
+                    <div className="label-mono text-brand-from">Outcome</div>
+                    <p className="mt-1 text-inkSoft">{p.outcome}</p>
+                  </div>
+                </div>
+
+                <div className="mt-6 flex flex-wrap gap-3">
+                  {p.demoInChat && (
+                    <button
+                      onClick={() => onOpenChat(`project:${p.slug}`)}
+                      className="btn-ghost focus-ring rounded-full border border-line px-4 py-2 text-xs font-medium text-ink"
+                    >
+                      💬 Ask the assistant
+                    </button>
+                  )}
+                  {p.caseStudy && (
+                    <Link
+                      href={`/projects/${p.slug}`}
+                      className="btn-primary focus-ring rounded-full px-4 py-2 text-xs font-medium text-white"
+                    >
+                      Read case study →
+                    </Link>
+                  )}
+                </div>
               </div>
             </motion.article>
           ))}

@@ -1,6 +1,6 @@
-// Everything the IC Assistant knows about Ifiok, the site, and how to help
-// a visitor. This is a lightweight local knowledge base (keyword matching),
-// not a live model, so answers are hand-written and kept accurate on purpose.
+// Grounded knowledge used to guide the live AI assistant on the website.
+// These facts are passed to the model through the server route rather than
+// being used as a separate hard-coded reply engine.
 
 export const ABOUT_IFIOK = `Ifiok Columba is an AI automation engineer. He designs and builds AI agents, workflows, and integrations that take repetitive, judgment-heavy manual work off a business's plate, the kind of task that usually means someone checking a spreadsheet every morning or manually deciding what needs attention today.`;
 
@@ -29,59 +29,6 @@ export const CONTACT = {
   github: "https://github.com/Jeff5812",
   x: "https://x.com/rust_automates",
 };
-
-// Free-text question matching. Keeps things simple, transparent, and always
-// truthful, no invented facts, no promises Ifiok hasn't made.
-type Rule = { keywords: string[]; answer: string };
-
-const RULES: Rule[] = [
-  {
-    keywords: ["price", "pricing", "cost", "rate", "budget", "how much", "charge"],
-    answer:
-      "Pricing depends on the scope of the workflow, so Ifiok prefers to quote after a quick conversation about what you need rather than guess at a number here. Want me to pass your details along so he can follow up with a quote?",
-  },
-  {
-    keywords: ["full time", "full-time", "employment", "hire you", "freelance only", "contract only", "job offer", "available for hire", "open to work"],
-    answer:
-      "Ifiok is open to both full-time roles and freelance/contract work, the right fit depends on the details. Best way to move forward is to send over what you have in mind and he'll get back to you directly. Want me to start that?",
-  },
-  {
-    keywords: ["who are you", "who is ifiok", "about you", "about ifiok", "who made this", "who built this"],
-    answer: ABOUT_IFIOK,
-  },
-  {
-    keywords: ["how does it work", "how does this work", "how do you work", "how does automation work", "explain", "process"],
-    answer: HOW_IT_WORKS,
-  },
-  {
-    keywords: ["service", "what do you offer", "what can you build", "what do you do"],
-    answer:
-      "Ifiok works across six areas: " +
-      SERVICES_SUMMARY.map((s) => s.name).join(", ") +
-      ". Want details on any of these, or should I show you real projects he's built?",
-  },
-  {
-    keywords: ["tool", "tech stack", "technology", "stack", "what do you use"],
-    answer: `The toolkit: ${TOOLS}`,
-  },
-  {
-    keywords: ["contact", "email", "reach", "get in touch", "talk to ifiok"],
-    answer: `You can reach Ifiok directly at ${CONTACT.email}, or I can collect your details right here and pass them along. Want me to do that?`,
-  },
-  {
-    keywords: ["project", "portfolio", "built", "work", "example", "case study"],
-    answer: "Ifiok has built a clinic follow-up and escalation system, and an autonomous micro-lending collection system. Want me to walk you through either one?",
-  },
-];
-
-export function answerFreeText(raw: string): string | null {
-  const q = raw.trim().toLowerCase();
-  if (!q) return null;
-  for (const rule of RULES) {
-    if (rule.keywords.some((k) => q.includes(k))) return rule.answer;
-  }
-  return null;
-}
 
 // System prompt for the AI-powered assistant. Keeps the model grounded in
 // only what Ifiok has actually said, no invented claims.

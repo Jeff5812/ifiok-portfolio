@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resendApiKey = process.env.RESEND_API_KEY;
+const resend = resendApiKey ? new Resend(resendApiKey) : null;
 
 // Where booking notifications land — your Gmail.
 const NOTIFY_TO = process.env.BOOKING_NOTIFY_EMAIL || "wizicolumba@gmail.com";
@@ -18,6 +19,10 @@ export async function POST(req: NextRequest) {
 
     if (!name || !email) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    }
+
+    if (!resend) {
+      return NextResponse.json({ ok: true, skipped: true });
     }
 
     await resend.emails.send({

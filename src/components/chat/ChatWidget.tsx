@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { projects } from "@/content/projects";
-import { answerFreeText, HOW_IT_WORKS, PROCESS_STEPS } from "./chatData";
+import { HOW_IT_WORKS, PROCESS_STEPS } from "./chatData";
 
 type Msg = { from: "bot" | "user"; text: string };
 type Mode = "menu" | "menu-projects" | "project" | "booking" | "booking-done";
@@ -37,8 +37,10 @@ export default function ChatWidget({
   const [step, setStep] = useState(0);
   const [bookingData, setBookingData] = useState<Record<string, string>>({});
   const [inputValue, setInputValue] = useState("");
+  const [isTyping, setIsTyping] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const initializedRef = useRef(false);
+  const typingTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (open && !initializedRef.current) {
@@ -56,7 +58,15 @@ export default function ChatWidget({
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
-  }, [messages, mode, step]);
+  }, [messages, mode, step, isTyping]);
+
+  useEffect(() => {
+    return () => {
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+      }
+    };
+  }, []);
 
   function pushBot(text: string) {
     setMessages((m) => [...m, { from: "bot", text }]);
@@ -76,8 +86,20 @@ export default function ChatWidget({
     setMode("menu");
   }
 
+  function queueBotReply(text: string, delay = 700) {
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+    }
+    setIsTyping(true);
+    typingTimeoutRef.current = window.setTimeout(() => {
+      setIsTyping(false);
+      pushBot(text);
+      typingTimeoutRef.current = null;
+    }, delay);
+  }
+
   function backToMenu() {
-    pushBot("Sure, what would you like to do next?");
+    queueBotReply("Sure, what would you like to do next?");
     setMode("menu");
     setStep(0);
   }
@@ -86,7 +108,7 @@ export default function ChatWidget({
     const p = projects.find((x) => x.slug === slug) ?? projects[0];
     setProjectSlug(p.slug);
     pushUser(`Tell me about "${p.title}"`);
-    pushBot(
+    queueBotReply(
       `**${p.title}**\n\nIn plain terms: ${p.tagline}\n\nThe problem: ${p.problem}\n\nHow it works: ${p.solution}\n\nThe result: ${p.outcome}`
     );
     setMode("project");
@@ -94,7 +116,7 @@ export default function ChatWidget({
 
   function explainHowItWorks() {
     pushUser("How does this actually work?");
-    pushBot(
+    queueBotReply(
       HOW_IT_WORKS +
         "\n\nHis usual process:\n" +
         PROCESS_STEPS.map((s, i) => `${i + 1}. ${s}`).join("\n")
@@ -104,7 +126,7 @@ export default function ChatWidget({
 
   function startBooking() {
     pushUser("I'd like to work together");
-    pushBot(
+    queueBotReply(
       "Nice, let's get the basics so Ifiok can follow up properly. First, what's your name?"
     );
     setBookingData({});
@@ -127,9 +149,9 @@ export default function ChatWidget({
     const nextIndex = step + 1;
     if (nextIndex < BOOKING_FIELDS.length) {
       setStep(nextIndex);
-      pushBot(BOOKING_FIELDS[nextIndex].label);
+      queueBotReply(BOOKING_FIELDS[nextIndex].label);
     } else {
-      pushBot("Sending that over to Ifiok now…");
+      queueBotReply("Sending that over to Ifiok now…");
       if (BOOKING_WEBHOOK_URL) {
         try {
           await fetch(BOOKING_WEBHOOK_URL, {
@@ -141,24 +163,41 @@ export default function ChatWidget({
           // fail silently
         }
       }
-      pushBot(
+      queueBotReply(
         `Thanks, ${next.name.split(" ")[0]}, that's in. Ifiok will get back to you at ${next.email} within a day or two. If it's urgent, mention that in a follow-up message here.`
       );
       setMode("booking-done");
     }
   }
 
-  function handleFreeText(raw: string) {
+  async function handleFreeText(raw: string) {
     const value = raw.trim();
     if (!value) return;
     pushUser(value);
     setInputValue("");
-    const answer = answerFreeText(value);
-    if (answer) {
-      pushBot(answer);
-    } else {
-      pushBot(
-        "I don't have a set answer for that, but Ifiok can. Want me to pass your question along to him, or would you like to see what he's built?"
+
+    try {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: [{ role: "user", content: value }] }),
+      });
+
+      if (!response.ok) throw new Error("Chat API failed");
+
+      const data = await response.json();
+      const reply = data.reply?.trim();
+
+      if (reply) {
+        queueBotReply(reply);
+      } else {
+        queueBotReply(
+          "I’m having trouble reaching the AI service right now. Please try again in a moment."
+        );
+      }
+    } catch {
+      queueBotReply(
+        "I’m having trouble reaching the AI service right now. Please try again in a moment."
       );
     }
   }
@@ -233,6 +272,26 @@ export default function ChatWidget({
                 {renderMarkdownish(m.text)}
               </div>
             ))}
+
+            {isTyping && (
+              <div className="max-w-[85%] rounded-2xl bg-panel2 px-3.5 py-2.5 text-sm text-ink">
+                <div className="flex items-center gap-2">
+                  <span className="text-[11px] font-medium uppercase tracking-[0.2em] text-inkSoft">
+                    IC Assistant is typing
+                  </span>
+                  <div className="flex items-center gap-1">
+                    {[0, 1, 2].map((dot) => (
+                      <motion.span
+                        key={dot}
+                        className="h-1.5 w-1.5 rounded-full bg-inkSoft"
+                        animate={{ y: [0, -3, 0] }}
+                        transition={{ duration: 0.5, repeat: Infinity, delay: dot * 0.12 }}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="border-t border-line p-3">
