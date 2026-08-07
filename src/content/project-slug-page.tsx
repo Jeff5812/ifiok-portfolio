@@ -105,8 +105,15 @@ export default function ProjectCaseStudyPage() {
                 <p className="mt-1">{cs.biggestChallenge}</p>
               </div>
               <div>
-                <div className="text-sm font-semibold text-ink">How I&apos;d improve it in production</div>
-                <p className="mt-1">{cs.improveInProduction}</p>
+                <div className="text-sm font-semibold text-ink">Future improvements</div>
+                <ul className="mt-2 space-y-2">
+                  {cs.futureImprovements.map((item) => (
+                    <li key={item} className="flex gap-2">
+                      <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-brand-from" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
             </div>
           </Section>
