@@ -1,0 +1,156 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+  --font-sans / --font-mono are now injected by next/font in layout.tsx
+  (real Inter + JetBrains Mono files, self-hosted, no external network
+  request at runtime). We just fall back gracefully if that ever fails.
+*/
+:root {
+  --ease-premium: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  background: #0a0c11;
+  color: #f5f6f8;
+  font-family: var(--font-sans, Inter, "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif);
+  font-feature-settings: "cv11", "ss01";
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-sans, Inter, "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif);
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+  font-weight: 800;
+  text-wrap: balance;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+a, button {
+  transition: color 0.25s var(--ease-premium), background-color 0.25s var(--ease-premium),
+    border-color 0.25s var(--ease-premium), opacity 0.25s var(--ease-premium);
+}
+
+::selection {
+  background: rgba(255, 90, 110, 0.3);
+  color: #fff;
+}
+
+.label-mono {
+  font-family: var(--font-mono, "JetBrains Mono", ui-monospace, monospace);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  /* +10% over the original 0.7rem, so every eyebrow label (Projects,
+     Skills, Services, Contact, Certification, etc.) grows in lockstep. */
+  font-size: 0.77rem;
+  font-weight: 600;
+}
+
+body {
+  font-size: 1rem;
+  line-height: 1.65;
+}
+
+/* Softened, less-neon version of the original gradient — same hue family,
+   pulled a touch toward a premium jewel tone instead of a bright warning-orange. */
+.grad-text {
+  background: linear-gradient(90deg, #ff5c7a 0%, #ff7a52 55%, #ffab5c 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.btn-primary {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  transition: transform 0.3s var(--ease-premium), box-shadow 0.3s var(--ease-premium);
+}
+.btn-primary::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(90deg, #ff5c7a 0%, #ff7a52 55%, #ffab5c 100%);
+  transition: transform 0.45s var(--ease-premium);
+}
+.btn-primary:hover::before {
+  transform: scale(1.05);
+}
+.btn-primary:active::before {
+  transform: scale(0.97);
+}
+
+.btn-ghost {
+  transition: border-color 0.25s var(--ease-premium), background-color 0.25s var(--ease-premium),
+    transform 0.2s var(--ease-premium);
+}
+.btn-ghost:hover {
+  border-color: #3a4152;
+  background-color: rgba(255, 255, 255, 0.03);
+}
+.btn-ghost:active {
+  transform: scale(0.97);
+}
+
+.focus-ring:focus-visible {
+  outline: 2px solid #ff8a5c;
+  outline-offset: 2px;
+  border-radius: inherit;
+}
+
+/* faint circuit-board backdrop used behind the hero portrait — kept subtle */
+.circuit-bg {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+.scrollbar-none::-webkit-scrollbar { display: none; }
+.scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ─── Mobile & Tablet Responsive Overrides ─────────────────────────────────
+   All rules below use min-width: 0 or max-width media queries so they
+   ONLY fire on small screens and never touch the desktop layout. */
+
+/* Prevent horizontal overflow on all screens */
+html, body {
+  overflow-x: hidden;
+}
+
+/* Touch-friendly tap targets on mobile */
+@media (max-width: 767px) {
+  /* Slightly more comfortable base font for mobile reading */
+  body {
+    font-size: 0.9375rem;
+  }
+
+  /* About page: on mobile the text column fills full width */
+  .about-text-col {
+    max-width: 100% !important;
+  }
+}
+
+/* Tablet: 768px – 1023px fine-tuning */
+@media (min-width: 768px) and (max-width: 1023px) {
+  /* Services grid: 2 cols on tablet instead of forcing 3 */
+  .services-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
