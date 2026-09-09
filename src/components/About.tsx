@@ -56,17 +56,21 @@ export default function About() {
           className="clear-both mt-14"
         >
           <div className="label-mono text-brand-from">Certification</div>
-          <div className="glass-card mt-4 flex flex-col items-center gap-4 rounded-2xl px-6 py-8 text-center sm:flex-row sm:items-center sm:justify-start sm:text-left">
-            <ImageLightbox
-              src="/certification.webp"
-              alt="AI Automation certificate, TechCrush"
-              fit="contain"
-              className="h-[166px] w-[229px] shrink-0 rounded-xl bg-panel"
-              imageClassName="p-2 group-hover:scale-100"
-            />
-            <div>
-              <div className="font-semibold text-ink">AI Automation, TechCrush</div>
-              <div className="mt-1 text-sm text-inkSoft">Issued August 31, 2026 · Credential TEC-6BF8BE3F</div>
+          <div className="glass-card mt-4 flex flex-col items-center gap-3 rounded-2xl px-4 py-5 text-center sm:flex-row sm:items-center sm:justify-start sm:gap-4 sm:px-5 sm:py-6 sm:text-left">
+            <div className="relative h-[166px] w-[229px] shrink-0 overflow-hidden rounded-xl">
+              <ImageLightbox
+                src="/certification.webp"
+                alt="AI Automation certificate, TechCrush"
+                fit="contain"
+                className="h-full w-full rounded-xl bg-panel"
+                imageClassName="p-2 group-hover:scale-100"
+              />
+            </div>
+            <div className="min-w-0 max-w-[220px] sm:max-w-[240px]">
+              <div className="text-base font-semibold text-ink">AI Automation, TechCrush</div>
+              <div className="mt-1 text-sm leading-relaxed text-inkSoft">
+                Issued August 31, 2026 · Credential TEC-6BF8BE3F
+              </div>
             </div>
           </div>
         </motion.div>
