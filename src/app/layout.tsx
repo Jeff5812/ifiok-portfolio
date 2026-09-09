@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { Inter, JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import { ChatProvider } from "@/context/ChatContext";
 import GlobalChat from "@/components/chat/GlobalChat";
@@ -20,6 +20,16 @@ const jetbrainsMono = JetBrains_Mono({
   display: "swap",
 });
 
+// Display font for headings only. Geometric and a little more character
+// than Inter, without going full novelty typeface — closer to the tone
+// tools like Pixtex use for their headlines, still readable at every size.
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+  variable: "--font-display",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "Ifiok Columba: Automation Engineer",
   description:
@@ -28,7 +38,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable}`}>
+    <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable} ${spaceGrotesk.variable}`}>
       <body className="bg-base text-ink">
         <ChatProvider>
           {children}

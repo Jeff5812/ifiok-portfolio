@@ -26,16 +26,16 @@ const GROUPS: SkillGroup[] = [
       { name: "n8n workflow orchestration", slug: "meridian-scheduling-agent", icon: "n8n" },
       { name: "MCP tool servers", slug: "meridian-scheduling-agent", icon: "mcp servers" },
       { name: "Webhook design", slug: "meridian-scheduling-agent", icon: "webhooks" },
-      { name: "Error handling & retry logic", slug: "invoice-intake-anomaly-detection", icon: "docker" },
+      { name: "Retry logic & idempotency", slug: "meridian-scheduling-agent", icon: "idempotency" },
     ],
   },
   {
     label: "AI & agents",
     items: [
-      { name: "AI agent design", slug: "meridian-scheduling-agent", icon: "ai agents" },
+      { name: "AI agent design (Gemini)", slug: "meridian-scheduling-agent", icon: "gemini" },
       { name: "RAG pipelines", slug: "stripe-docs-support-bot", icon: "gemini" },
-      { name: "Structured extraction", slug: "invoice-intake-anomaly-detection", icon: "gemini" },
-      { name: "Confidence-gated scoring", slug: "ai-lead-scoring-and-routing", icon: "gemini" },
+      { name: "Structured output parsing", slug: "invoice-intake-anomaly-detection", icon: "gemini" },
+      { name: "Lead scoring logic", slug: "ai-lead-scoring-and-routing", icon: "gemini" },
       { name: "Prompt engineering", slug: "stripe-docs-support-bot", icon: "prompt engineering" },
     ],
   },
@@ -43,9 +43,9 @@ const GROUPS: SkillGroup[] = [
     label: "Data & storage",
     items: [
       { name: "PostgreSQL & Supabase", slug: "meridian-scheduling-agent", icon: "postgresql" },
-      { name: "Database constraints as guardrails", slug: "meridian-scheduling-agent", icon: "postgresql" },
+      { name: "SQL constraints & triggers", slug: "meridian-scheduling-agent", icon: "postgresql" },
       { name: "Vector search (pgvector)", slug: "stripe-docs-support-bot", icon: "supabase" },
-      { name: "Google Workspace integrations", slug: "invoice-intake-anomaly-detection", icon: "gmail" },
+      { name: "Gmail & Google Sheets API", slug: "invoice-intake-anomaly-detection", icon: "gmail" },
     ],
   },
 ];

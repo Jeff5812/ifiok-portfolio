@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { ImageLightbox } from "./ImageLightbox";
 
 export default function About() {
   // Flip this back to false if the certificate image isn't in place yet.
@@ -56,15 +57,13 @@ export default function About() {
         >
           <div className="label-mono text-brand-from">Certification</div>
           <div className="mt-4 flex flex-col items-center gap-4 rounded-2xl border border-line bg-panel/40 px-6 py-8 text-center sm:flex-row sm:items-center sm:justify-start sm:text-left">
-            <div className="relative h-32 w-44 shrink-0 overflow-hidden rounded-xl border border-line bg-panel">
-              <Image
-                src="/certification.webp"
-                alt="AI Automation certificate, TechCrush"
-                fill
-                sizes="176px"
-                className="object-contain p-2"
-              />
-            </div>
+            <ImageLightbox
+              src="/certification.webp"
+              alt="AI Automation certificate, TechCrush"
+              fit="contain"
+              className="h-[166px] w-[229px] shrink-0 rounded-xl bg-panel"
+              imageClassName="p-2 group-hover:scale-100"
+            />
             <div>
               <div className="font-semibold text-ink">AI Automation, TechCrush</div>
               <div className="mt-1 text-sm text-inkSoft">Issued August 31, 2026 · Credential TEC-6BF8BE3F</div>

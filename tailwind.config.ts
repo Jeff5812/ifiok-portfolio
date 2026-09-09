@@ -19,6 +19,7 @@ const config: Config = {
       fontFamily: {
         mono: ["var(--font-mono)", "ui-monospace", "SFMono-Regular", "monospace"],
         sans: ["var(--font-sans)", "ui-sans-serif", "system-ui", "sans-serif"],
+        display: ["var(--font-display)", "var(--font-sans)", "ui-sans-serif", "sans-serif"],
       },
       backgroundImage: {
         "brand-gradient": "linear-gradient(90deg, #ff5c7a 0%, #ff7a52 55%, #ffab5c 100%)",

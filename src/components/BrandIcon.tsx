@@ -7,6 +7,9 @@ import {
   Users,
   Share2,
   Container,
+  Server,
+  RotateCcw,
+  ShieldCheck,
 } from "lucide-react";
 
 // Official brand marks sourced from simple-icons (CC0), stored as local SVGs
@@ -31,6 +34,10 @@ const LOGO_FILES: Record<string, string> = {
   "openai (llm)": "/logos/openai.png",
   claude: "/logos/claude.svg",
   upwork: "/logos/upwork.svg",
+  slack: "/logos/slack.svg",
+  "google sheets": "/logos/googlesheets.svg",
+  telegram: "/logos/telegram.svg",
+  "google calendar": "/logos/googlecalendar.svg",
 };
 
 const BRAND_COLOR: Record<string, string> = {
@@ -54,6 +61,10 @@ const BRAND_COLOR: Record<string, string> = {
   openai: "#ffffff",
   "openai (llm)": "#ffffff",
   claude: "#D97757",
+  slack: "#ffffff",
+  "google sheets": "#0F9D58",
+  telegram: "#26A5E4",
+  "google calendar": "#4285F4",
 };
 
 // Tools without a usable trademark-safe SVG get a clean lucide-react icon instead.
@@ -63,7 +74,12 @@ const FALLBACK_ICON: Record<string, React.ComponentType<any>> = {
   twilio: MessageCircle,
   openai: Sparkles,
   "openai (llm)": Sparkles,
-  "mcp servers": Braces,
+  mcp: Server,
+  "mcp servers": Server,
+  "retry logic": RotateCcw,
+  "error handling & retry logic": RotateCcw,
+  "idempotency": ShieldCheck,
+  "idempotency & race-condition handling": ShieldCheck,
   "ai agents": Bot,
   "prompt engineering": Bot,
   "chatbot design": MessageCircle,

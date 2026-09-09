@@ -9,11 +9,13 @@ export function ImageLightbox({
   alt,
   className,
   imageClassName,
+  fit = "cover",
 }: {
   src: string;
   alt: string;
   className?: string;
   imageClassName?: string;
+  fit?: "cover" | "contain";
 }) {
   const [open, setOpen] = useState(false);
   const [zoomed, setZoomed] = useState(false);
@@ -78,7 +80,7 @@ export function ImageLightbox({
           alt={alt}
           fill
           sizes="(min-width: 768px) 576px, 92vw"
-          className={`object-cover object-left-top transition-transform duration-500 group-hover:scale-105 ${imageClassName ?? ""}`}
+          className={`${fit === "contain" ? "object-contain" : "object-cover object-left-top"} transition-transform duration-500 group-hover:scale-105 ${imageClassName ?? ""}`}
         />
         <span className="pointer-events-none absolute bottom-3 right-3 rounded-full border border-line bg-panel/90 px-3 py-1 text-[11px] font-medium text-inkSoft opacity-0 transition-opacity duration-300 group-hover:opacity-100">
           Click to view full size

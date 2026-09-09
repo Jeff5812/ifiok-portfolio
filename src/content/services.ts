@@ -1,40 +1,42 @@
-import { Bot, MessageCircle, Braces, UserCheck, Share2, Workflow } from "lucide-react";
+import { Bot, MessageCircle, Braces, UserCheck, Database, Workflow } from "lucide-react";
 
+// Every line here should be something one of the live /projects can actually
+// back up. If a service doesn't map to a real build, it doesn't belong here.
 export const SERVICES = [
   {
     title: "Workflow Automation",
     description:
-      "n8n pipelines that replace manual, repetitive steps with reliable, trigger-based workflows.",
+      "n8n workflows that take over multi-step manual processes, form intake, approvals, reminders, so nothing depends on someone remembering to do it.",
     icon: Workflow,
   },
   {
     title: "AI Agent Development",
     description:
-      "Agents that make judgment calls, risk scoring, sentiment reading, routing, with confidence gating and human fallback.",
+      "Agents that hold a conversation and take real action, booking, rescheduling, answering support questions, with the database as the final check, not the model's judgment.",
     icon: Bot,
   },
   {
-    title: "Custom Chatbots & Assistants",
+    title: "Telegram & Chat Assistants",
     description:
-      "Conversational assistants for your site or WhatsApp that answer questions and trigger real workflows.",
+      "Assistants that run inside Telegram or your site, answer from your own documents, and hand off to a human when they're not sure.",
     icon: MessageCircle,
   },
   {
     title: "LLM & API Integration",
     description:
-      "Wiring OpenAI, Claude, Gemini, and third-party APIs into your existing systems so they act on real data.",
+      "Connecting Gemini, OpenAI, or Claude to your existing tools, Google Calendar, Sheets, Slack, a database, so the model can act on real data, not just talk about it.",
     icon: Braces,
   },
   {
-    title: "Lead Qualification Systems",
+    title: "Lead Scoring & Routing",
     description:
-      "Automated intake and scoring so the right leads reach the right person, without manual triage.",
+      "Intake forms that get checked for duplicates, scored for intent, and routed to the right person automatically, hot leads paged, cold leads logged.",
     icon: UserCheck,
   },
   {
-    title: "Multi-Platform Posting",
+    title: "Data Validation Pipelines",
     description:
-      "One workflow, many destinations, content and updates distributed across channels automatically.",
-    icon: Share2,
+      "Incoming documents, like invoices, checked for math errors and duplicates before they ever reach a spreadsheet or an inbox.",
+    icon: Database,
   },
 ];

@@ -25,10 +25,10 @@ body {
 }
 
 h1, h2, h3, h4 {
-  font-family: var(--font-sans, Inter, "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif);
-  letter-spacing: -0.025em;
-  line-height: 1.1;
-  font-weight: 800;
+  font-family: var(--font-display, var(--font-sans), Inter, "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif);
+  letter-spacing: -0.02em;
+  line-height: 1.08;
+  font-weight: 700;
   text-wrap: balance;
 }
 
@@ -53,12 +53,12 @@ a, button {
 
 .label-mono {
   font-family: var(--font-mono, "JetBrains Mono", ui-monospace, monospace);
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  /* +10% over the original 0.7rem, so every eyebrow label (Projects,
-     Skills, Services, Contact, Certification, etc.) grows in lockstep. */
-  font-size: 0.77rem;
-  font-weight: 600;
+  /* Bumped again so eyebrow labels (Projects, Skills, Services, Contact,
+     Certification, etc.) read as a real label, not fine print. */
+  font-size: 0.875rem;
+  font-weight: 700;
 }
 
 body {
