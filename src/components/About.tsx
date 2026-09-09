@@ -56,7 +56,7 @@ export default function About() {
           className="clear-both mt-14"
         >
           <div className="label-mono text-brand-from">Certification</div>
-          <div className="mt-4 flex flex-col items-center gap-4 rounded-2xl border border-line bg-panel/40 px-6 py-8 text-center sm:flex-row sm:items-center sm:justify-start sm:text-left">
+          <div className="glass-card mt-4 flex flex-col items-center gap-4 rounded-2xl px-6 py-8 text-center sm:flex-row sm:items-center sm:justify-start sm:text-left">
             <ImageLightbox
               src="/certification.webp"
               alt="AI Automation certificate, TechCrush"

@@ -39,7 +39,7 @@ export default function Hero({ onOpenChat }: { onOpenChat: (intent?: string) => 
             initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="relative mx-auto mt-8 aspect-[4/5] w-full max-w-xs overflow-hidden rounded-3xl border border-line bg-panel shadow-glow md:hidden"
+            className="glass-card relative mx-auto mt-8 aspect-[4/5] w-full max-w-xs overflow-hidden rounded-3xl shadow-glow md:hidden"
           >
             <Image
               src="/portrait.png"
@@ -83,7 +83,7 @@ export default function Hero({ onOpenChat }: { onOpenChat: (intent?: string) => 
           transition={{ duration: 0.6, delay: 0.1 }}
           className="relative hidden md:block"
         >
-          <div className="relative mx-auto aspect-[4/5] w-full max-w-sm overflow-hidden rounded-3xl border border-line bg-panel shadow-glow">
+          <div className="glass-card relative mx-auto aspect-[4/5] w-full max-w-sm overflow-hidden rounded-3xl shadow-glow">
             <Image
               src="/portrait.png"
               alt="Ifiok Columba"

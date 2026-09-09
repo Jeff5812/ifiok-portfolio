@@ -17,7 +17,7 @@ export default function Header({ onOpenChat }: { onOpenChat: (intent?: string) =
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-line/70 bg-base/85 backdrop-blur-md">
+    <header className="glass-panel sticky top-0 z-40 border-b border-line/70">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3.5">
         <Link href="/" className="focus-ring rounded-md">
           <Logo />
