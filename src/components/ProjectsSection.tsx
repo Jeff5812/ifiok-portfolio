@@ -10,30 +10,34 @@ export default function ProjectsSection({
   onOpenChat,
   featuredOnly = false,
   showViewAll = false,
+  showHeader = true,
 }: {
   onOpenChat: (intent?: string) => void;
   featuredOnly?: boolean;
   showViewAll?: boolean;
+  showHeader?: boolean;
 }) {
   const projects = featuredOnly ? allProjects.filter((p) => p.featured) : allProjects;
 
   return (
     <section id="projects" className="border-b border-line/70 bg-panel/40">
       <div className="mx-auto max-w-6xl px-6 py-16 md:py-20">
-        <div className="mb-10 flex flex-wrap items-end justify-between gap-4 md:mb-12">
-          <div>
-            <div className="label-mono text-brand-from">Projects</div>
-            <h2 className="mt-2 text-3xl font-extrabold tracking-tight md:text-4xl">Things I have built</h2>
+        {showHeader && (
+          <div className="mb-10 flex flex-wrap items-end justify-between gap-4 md:mb-12">
+            <div>
+              <div className="label-mono text-brand-from">Projects</div>
+              <h2 className="mt-2 text-3xl font-extrabold tracking-tight md:text-4xl">Things I have built</h2>
+            </div>
+            {showViewAll && (
+              <Link
+                href="/projects"
+                className="btn-ghost focus-ring rounded-full border border-line px-4 py-2 text-xs font-medium text-ink"
+              >
+                View all projects →
+              </Link>
+            )}
           </div>
-          {showViewAll && (
-            <Link
-              href="/projects"
-              className="btn-ghost focus-ring rounded-full border border-line px-4 py-2 text-xs font-medium text-ink"
-            >
-              View all projects →
-            </Link>
-          )}
-        </div>
+        )}
 
         <div className="flex flex-col gap-12 md:gap-16">
           {projects.map((p, i) => (

@@ -68,6 +68,17 @@ export default function ProjectCaseStudyPage() {
           />
         </div>
 
+        {project.secondaryScreenshot && (
+          <div className="mt-4">
+            <ImageLightbox
+              src={project.secondaryScreenshot.src}
+              alt={`${project.title} — secondary workflow canvas`}
+              className="aspect-video"
+            />
+            <p className="mt-2 text-sm text-inkSoft">{project.secondaryScreenshot.caption}</p>
+          </div>
+        )}
+
         <div className="mt-10">
           <Section title="Project Status">
             <p>{cs.projectStatus}</p>
@@ -117,6 +128,37 @@ export default function ProjectCaseStudyPage() {
           <Section title="Future Improvements">
             <BulletList items={cs.futureImprovements} />
           </Section>
+        </div>
+
+        <div className="mt-10 border-t border-line pt-8">
+          <div className="label-mono text-brand-from">Shared Across Every Project</div>
+          <h2 className="mt-3 text-xl font-bold">The Global Error Handler</h2>
+          <p className="mt-3 text-inkSoft">
+            Every workflow on this site, including this one, reports into the same error handler instead of
+            failing silently. When any node in any workflow throws, n8n's Error Trigger catches it, a small
+            code step pulls out the workflow name, the node that failed, and the actual error message, and it
+            lands in my inbox as a plain email alert. One shared piece of infrastructure instead of duplicating
+            error-handling logic four separate times.
+          </p>
+          <div className="mt-5">
+            <ImageLightbox
+              src="/projects/global-error-handler.webp"
+              alt="Global Error Handler workflow: Error Trigger, Extract Error Details, Send Error Alert"
+              className="aspect-[21/9]"
+            />
+          </div>
+        </div>
+
+        <div className="mt-10 flex flex-col items-center gap-2 border-t border-line pt-8">
+          <a
+            href={`https://github.com/Jeff5812/ifiok-automation-demos/tree/main/${project.slug}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-primary focus-ring rounded-full px-6 py-3 text-sm font-semibold"
+          >
+            View the code &amp; set it up yourself →
+          </a>
+
         </div>
 
         <div className="mt-10 flex items-center justify-between border-t border-line pt-8">

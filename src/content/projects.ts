@@ -13,6 +13,10 @@ export type Project = {
   // Drop a Canva/Figma export or a screenshot of the live n8n canvas here:
   // public/projects/<slug>.png, shown automatically if the file exists.
   screenshot: string;
+  // Optional second workflow image for a project with more than one moving
+  // part worth showing (e.g. a separate MCP tool-server canvas). Rendered
+  // right under the main screenshot on the case study page only.
+  secondaryScreenshot?: { src: string; caption: string };
   demoInChat: boolean; // if true, shows a "chat about this project" button on the card
   featured: boolean; // if true, shows on the homepage; all projects show on /projects
   // Full technical writeup, rendered at /projects/[slug]. Optional — a project
@@ -180,6 +184,11 @@ export const projects: Project[] = [
     outcome:
       "The result is a receptionist that never double-books, never leaves the calendar and the database disagreeing about what happened, and treats its own model's confidence as advisory, not authoritative. That's the pattern I use across client scheduling work, this is the clearest, smallest version of it I could build end to end.",
     screenshot: "/projects/meridian-scheduling-agent.webp",
+    secondaryScreenshot: {
+      src: "/projects/meridian-mcp-calendar-server.webp",
+      caption:
+        "The separate MCP tool server the agent calls into: check_availability, book_appointment, reschedule_appointment, cancel_appointment, record_appointment, update_appointment_record, and list_my_appointments, each backed by Google Calendar or Postgres directly.",
+    },
     demoInChat: true,
     featured: true,
     caseStudy: {

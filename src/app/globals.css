@@ -2,12 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-/*
-  --font-sans / --font-mono are now injected by next/font in layout.tsx
-  (real Inter + JetBrains Mono files, self-hosted, no external network
-  request at runtime). We just fall back gracefully if that ever fails.
-*/
 :root {
+  --font-sans: "Inter";
+  --font-mono: "JetBrains Mono";
+  --font-display: "Space Grotesk";
+  --font-hero: "Unbounded";
   --ease-premium: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -15,13 +14,22 @@ html {
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  /* Sitewide text was reading small. Bumping the root size scales every
+     rem-based Tailwind text-* utility across the whole site uniformly
+     (roughly a 12% lift) without needing to touch every component. */
+  font-size: 112.5%;
 }
 
 body {
   background: #0a0c11;
   color: #f5f6f8;
-  font-family: var(--font-sans, Inter, "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif);
+  font-family: var(--font-sans);
   font-feature-settings: "cv11", "ss01";
+  /* Dialed back from 600 — that read as too heavy. 540 sits between the
+     original 500 (too thin) and 600 (too heavy). Inter is a variable font
+     loaded with no fixed weight steps, so a non-round value like this
+     renders correctly rather than snapping to the nearest 100. */
+  font-weight: 540;
 }
 
 /* Film-grain overlay. A single static SVG noise image, painted once and
@@ -75,9 +83,12 @@ body::after {
 }
 
 h1, h2, h3, h4 {
-  font-family: var(--font-display, var(--font-sans), Inter, "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif);
+  font-family: var(--font-display);
   letter-spacing: -0.02em;
-  line-height: 1.08;
+  line-height: 1.1;
+  /* 700 is Space Grotesk's real maximum weight — asking for 800 here
+     would just trigger the browser's synthetic (blurry) bold on top of
+     it, since no heavier weight actually exists to load. */
   font-weight: 700;
   text-wrap: balance;
 }
@@ -102,13 +113,13 @@ a, button {
 }
 
 .label-mono {
-  font-family: var(--font-mono, "JetBrains Mono", ui-monospace, monospace);
-  letter-spacing: 0.06em;
+  font-family: var(--font-mono);
+  letter-spacing: 0.05em;
   text-transform: uppercase;
-  /* Bumped again so eyebrow labels (Projects, Skills, Services, Contact,
-     Certification, etc.) read as a real label, not fine print. */
+  /* JetBrains Mono actually loads an 800 weight (unlike Space Grotesk),
+     so this one can safely go heavier without faking it. */
   font-size: 0.875rem;
-  font-weight: 700;
+  font-weight: 800;
 }
 
 body {

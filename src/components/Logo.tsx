@@ -1,6 +1,6 @@
-export default function Logo({ size = 36 }: { size?: number }) {
+export default function Logo({ size = 44 }: { size?: number }) {
   return (
-    <div className="flex items-center gap-2.5">
+    <div className="flex items-center gap-3">
       <svg
         width={size}
         height={size}
@@ -30,8 +30,8 @@ export default function Logo({ size = 36 }: { size?: number }) {
         />
       </svg>
       <div className="leading-tight">
-        <div className="text-[15px] font-bold tracking-tight text-ink">Ifiok Columba</div>
-        <div className="text-[11px] font-medium tracking-wide text-inkSoft">Automation Engineer</div>
+        <div className="font-hero text-[19px] font-bold tracking-tight text-ink">Ifiok Columba</div>
+        <div className="text-[14px] font-medium tracking-wide text-inkSoft">Automation Engineer</div>
       </div>
     </div>
   );

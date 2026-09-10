@@ -21,7 +21,7 @@ export default function Hero({ onOpenChat }: { onOpenChat: (intent?: string) => 
             <span className="grad-text">⚡ AUTOMATION ENGINEER</span>
           </span>
 
-          <h1 className="mt-5 text-4xl font-extrabold leading-[1.1] tracking-tight sm:text-5xl md:text-6xl">
+          <h1 className="mt-5 max-w-lg font-hero text-3xl font-extrabold leading-[1.25] tracking-tight sm:text-4xl md:text-5xl">
             I build <span className="grad-text">automations</span>
             <br /> that save time and
             <br /> drive results.

@@ -56,9 +56,6 @@ export default function Skills() {
       <div className="mx-auto max-w-6xl px-6 py-16 md:py-20">
         <div className="label-mono text-brand-from">Skills</div>
         <h2 className="mt-2 text-3xl font-extrabold tracking-tight md:text-4xl">What I work with</h2>
-        <p className="mt-2 max-w-xl text-sm text-inkSoft">
-          Each one links to the project that actually proves it, not just a claim.
-        </p>
 
         <div className="mt-10 grid gap-8 sm:grid-cols-3 sm:gap-10">
           {GROUPS.map((g, gi) => (

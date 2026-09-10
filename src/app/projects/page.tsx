@@ -16,7 +16,7 @@ export default function ProjectsPage() {
           Every workflow I&apos;ve shipped
         </h1>
       </div>
-      <ProjectsSection onOpenChat={openChat} />
+      <ProjectsSection onOpenChat={openChat} showHeader={false} />
       <Footer />
     </main>
   );

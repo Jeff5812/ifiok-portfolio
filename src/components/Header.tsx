@@ -29,7 +29,7 @@ export default function Header({ onOpenChat }: { onOpenChat: (intent?: string) =
             <Link
               key={item.href}
               href={item.href}
-              className="focus-ring rounded-sm font-sans text-sm font-medium text-brand-from transition-colors hover:text-ink"
+              className="focus-ring rounded-sm font-display text-sm font-semibold text-brand-from transition-colors hover:text-ink"
             >
               {item.label}
             </Link>
@@ -74,7 +74,7 @@ export default function Header({ onOpenChat }: { onOpenChat: (intent?: string) =
                 key={item.href}
                 href={item.href}
                 onClick={() => setMenuOpen(false)}
-                className="focus-ring rounded-lg px-2 py-3 font-sans text-sm font-medium text-brand-from transition-colors hover:bg-panel hover:text-ink"
+                className="focus-ring rounded-lg px-2 py-3 font-display text-sm font-semibold text-brand-from transition-colors hover:bg-panel hover:text-ink"
               >
                 {item.label}
               </Link>

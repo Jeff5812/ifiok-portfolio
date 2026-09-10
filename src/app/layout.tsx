@@ -1,34 +1,20 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono, Space_Grotesk } from "next/font/google";
+import "@fontsource/inter/400.css";
+import "@fontsource/inter/500.css";
+import "@fontsource/inter/600.css";
+import "@fontsource/inter/700.css";
+import "@fontsource/jetbrains-mono/400.css";
+import "@fontsource/jetbrains-mono/500.css";
+import "@fontsource/jetbrains-mono/600.css";
+import "@fontsource/jetbrains-mono/700.css";
+import "@fontsource/space-grotesk/500.css";
+import "@fontsource/space-grotesk/600.css";
+import "@fontsource/space-grotesk/700.css";
+import "@fontsource/unbounded/700.css";
+import "@fontsource/unbounded/800.css";
 import "./globals.css";
 import { ChatProvider } from "@/context/ChatContext";
 import GlobalChat from "@/components/chat/GlobalChat";
-
-// Actual font files, loaded and self-hosted by Next at build time — replaces
-// the old setup where "Inter" / "JetBrains Mono" were named in CSS but never
-// loaded, so every visitor was silently seeing their OS default font instead.
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-sans",
-  display: "swap",
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
-  variable: "--font-mono",
-  display: "swap",
-});
-
-// Display font for headings only. Geometric and a little more character
-// than Inter, without going full novelty typeface — closer to the tone
-// tools like Pixtex use for their headlines, still readable at every size.
-const spaceGrotesk = Space_Grotesk({
-  subsets: ["latin"],
-  weight: ["500", "600", "700"],
-  variable: "--font-display",
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   title: "Ifiok Columba: Automation Engineer",
@@ -38,7 +24,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable} ${spaceGrotesk.variable}`}>
+    <html lang="en">
       <body className="bg-base text-ink">
         <ChatProvider>
           {children}
