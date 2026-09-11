@@ -32,7 +32,7 @@ const GROUPS: SkillGroup[] = [
   {
     label: "AI & agents",
     items: [
-      { name: "AI agent design (Gemini)", slug: "meridian-scheduling-agent", icon: "gemini" },
+      { name: "LLM integration (Claude, OpenAI, Gemini)", slug: "meridian-scheduling-agent", icon: "claude" },
       { name: "RAG pipelines", slug: "stripe-docs-support-bot", icon: "gemini" },
       { name: "Structured output parsing", slug: "invoice-intake-anomaly-detection", icon: "gemini" },
       { name: "Lead scoring logic", slug: "ai-lead-scoring-and-routing", icon: "gemini" },

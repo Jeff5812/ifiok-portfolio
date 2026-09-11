@@ -4,7 +4,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { ToolChip } from "./ToolChip";
 
-const TOOLS = ["n8n", "OpenAI", "Gemini", "Python", "PostgreSQL", "Supabase"];
+const TOOLS = ["n8n", "Claude", "OpenAI", "Gemini", "JavaScript", "Python", "PostgreSQL", "Supabase"];
 
 export default function Hero({ onOpenChat }: { onOpenChat: (intent?: string) => void }) {
   return (

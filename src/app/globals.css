@@ -25,11 +25,8 @@ body {
   color: #f5f6f8;
   font-family: var(--font-sans);
   font-feature-settings: "cv11", "ss01";
-  /* Dialed back from 600 — that read as too heavy. 540 sits between the
-     original 500 (too thin) and 600 (too heavy). Inter is a variable font
-     loaded with no fixed weight steps, so a non-round value like this
-     renders correctly rather than snapping to the nearest 100. */
-  font-weight: 540;
+  /* Set to the plain base weight for a lighter, cleaner reading tone. */
+  font-weight: 400;
 }
 
 /* Film-grain overlay. A single static SVG noise image, painted once and

@@ -24,7 +24,7 @@ export const SERVICES = [
   {
     title: "LLM & API Integration",
     description:
-      "Connecting Gemini, OpenAI, or Claude to your existing tools, Google Calendar, Sheets, Slack, a database, so the model can act on real data, not just talk about it.",
+      "Connecting Claude, OpenAI, or Gemini to your existing tools, Google Calendar, Sheets, Slack, a database, so the model can act on real data, not just talk about it.",
     icon: Braces,
   },
   {
