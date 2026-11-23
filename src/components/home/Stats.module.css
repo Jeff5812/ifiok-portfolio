@@ -1,0 +1,48 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 28px 26px;
+  border-radius: 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+.n {
+  font-size: clamp(2.5rem, 1.8rem + 2vw, 3.5rem);
+  font-weight: 300;
+  letter-spacing: -0.05em;
+  line-height: 1;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.label {
+  margin-top: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.note {
+  font-size: 0.875rem;
+  color: var(--text-3);
+}
+
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

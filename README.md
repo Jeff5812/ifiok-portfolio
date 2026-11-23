@@ -1,131 +1,56 @@
-# Ifiok Columba — AI Automation Portfolio
+# Ifiok Columba — portfolio
 
-This repository contains the current production-ready portfolio for Ifiok Columba, built as a polished Next.js marketing site and automation portfolio.
+Software & AI automation engineer. Live at <https://ifiok-portfolio.vercel.app>.
 
-## Live
+## What's here
 
-- Production: https://ifiok-portfolio.vercel.app
-- GitHub: https://github.com/Jeff5812/ifiok-portfolio
+| Page | What it shows |
+| --- | --- |
+| `/` | Hero, numbers, featured projects, a live demo of the collections router's decision logic, services preview |
+| `/projects`, `/projects/<slug>` | Every project in full (problem, key features, outcome) and a case study for each |
+| `/skills` | Skills linked to the projects that prove them, and an explorer of the tools behind them |
+| `/services` | What I build, and how a project goes |
+| `/about` | Background, how I work, certificate, what I'm doing now |
+| `/contact` | Contact form, profiles, and booking through the assistant |
 
-## What changed in this version
+The **AI assistant** (bottom right) answers questions about the work, grounded in the same project data the pages
+render (`src/lib/assistant-prompt.ts`), and can take a booking.
 
-Compared with the earlier portfolio version, the current codebase includes a more premium design system and a cleaner production-ready structure:
+## Content
 
-- Full dark premium brand styling with softer gradients and more readable contrast
-- A fixed film-grain overlay applied once at low opacity for texture without performance cost
-- Limited glass styling only on static surfaces (header, hero portrait card, certificate card) with a safe `@supports` fallback
-- Better mobile and desktop spacing system across sections
-- Improved certificate card layout to prevent overlap and text crowding
-- Stronger typography setup using Next.js self-hosted fonts instead of relying on browser defaults
-- Real chat and booking API routes with production-style error handling
-- Cleaner metadata and layout architecture for Vercel deployment
+Everything you'd edit lives in `src/content/`:
 
-## Current stack
+- `projects.ts`: every project and its case study
+- `offer.ts`: skills and services
+- `tools.ts`: the tools, which projects use them, and social links
+- `site.ts`: name, links, availability and the "Now" list
 
-- Next.js 14 (App Router)
-- TypeScript
-- Tailwind CSS
-- Framer Motion
-- Resend for email automation
-- OpenAI chat API route
-- Vercel deployment
+## Logic behind the demo
 
-## Font loading and production safety
+`src/lib/collections.ts` is the collections workflow's decision path (its Parse AI Output, Confidence Check and
+Route by Risk Tier nodes) ported to TypeScript. `src/lib/*.test.ts` checks it and the other ported models.
 
-The project uses Next.js font optimization for these fonts:
+## Assets
 
-- Inter
-- JetBrains Mono
-- Space Grotesk
+- 3D logos in `public/media/3d` are real brand marks (Simple Icons paths, CC0; n8n's classic mark) rendered
+  locally with three.js.
+- `npm run assets` rebuilds the fonts and portrait crops from `assets/`.
 
-They are loaded in [src/app/layout.tsx](src/app/layout.tsx) using `next/font/google`, which makes them compile into the production build and serve correctly on Vercel. This is the correct way to ensure the custom fonts are included in production; it avoids missing or fallback fonts caused by CSS-only declarations.
+## Environment
 
-## Key app features
+Same variables as the previous site (see `.env.example`):
 
-- Home landing page with brand messaging and CTA flow
-- Projects showcase with case study pages
-- Services overview and conversion-oriented CTA sections
-- About page with portfolio and certification card
-- Contact page with lead capture
-- AI assistant chat widget with OpenAI-backed responses and fallback behavior
-- Booking request route connected to email delivery via Resend
+- `OPENAI_API_KEY`: the assistant. `OPENAI_MODEL` is optional and defaults to `gpt-4o-mini`.
+- `RESEND_API_KEY`, `BOOKING_NOTIFY_EMAIL`: the contact form and the assistant's "Book a call".
 
-## Project structure
+Without them the site still works; the assistant and form say plainly that they can't send, and show the email.
 
-```bash
-src/
-  app/
-    about/
-    api/
-      booking/
-      chat/
-    contact/
-    projects/
-    services/
-    globals.css
-    layout.tsx
-    page.tsx
-  components/
-    About.tsx
-    Contact.tsx
-    Footer.tsx
-    Header.tsx
-    Hero.tsx
-    ImageLightbox.tsx
-    ProjectsSection.tsx
-    Services.tsx
-    Skills.tsx
-    ToolChip.tsx
-    chat/
-  content/
-    projects.ts
-    services.ts
-  context/
-    ChatContext.tsx
-```
-
-## Environment variables
-
-Create a `.env.local` file before local development:
-
-```bash
-OPENAI_API_KEY=your_openai_key
-RESEND_API_KEY=your_resend_key
-BOOKING_NOTIFY_EMAIL=wizicolumba@gmail.com
-```
-
-Notes:
-
-- `OPENAI_API_KEY` powers the AI chat endpoint.
-- `RESEND_API_KEY` powers the booking/contact email route.
-- `BOOKING_NOTIFY_EMAIL` is the inbox where new inquiries are sent.
-
-## Local development
+## Develop
 
 ```bash
 npm install
-npm run dev
+npm run dev        # http://localhost:3000
+npm run check      # typecheck, lint, tests, production build
 ```
 
-Then open:
-
-```bash
-http://localhost:3000
-```
-
-## Production deployment
-
-This app is intended to be deployed on Vercel. Before the first production deploy, add these environment variables in the Vercel dashboard under Project Settings → Environment Variables:
-
-- `OPENAI_API_KEY`
-- `RESEND_API_KEY`
-- `BOOKING_NOTIFY_EMAIL`
-
-The font setup is automatically included during the Next.js production build, so no extra static font hosting step is required when using the current config.
-
-## Contact
-
-- Email: wizicolumba@gmail.com
-- GitHub: https://github.com/Jeff5812
-- X: https://x.com/rust_automates
-- Upwork: https://www.upwork.com/freelancers/~01c94dc22db54d989f
+Next.js 16, React 19, TypeScript. No UI framework: CSS modules over a small set of tokens in `src/app/globals.css`.

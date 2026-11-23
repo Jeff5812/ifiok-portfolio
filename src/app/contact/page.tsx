@@ -1,17 +1,75 @@
-"use client";
+import type { Metadata } from "next";
+import AskButton from "@/components/chat/AskButton";
+import ContactForm from "@/components/contact/ContactForm";
+import CopyEmail from "@/components/contact/CopyEmail";
+import Icon from "@/components/ui/Icon";
+import PageHeader from "@/components/ui/PageHeader";
+import { SITE } from "@/content/site";
+import { iconSrc } from "@/content/tools";
+import s from "./contact.module.css";
 
-import Header from "@/components/Header";
-import Contact from "@/components/Contact";
-import Footer from "@/components/Footer";
-import { useChat } from "@/context/ChatContext";
+export const metadata: Metadata = {
+  title: "Contact",
+  description: "Get in touch with Ifiok Columba about a project, a role or a question.",
+  alternates: { canonical: "/contact" },
+};
+
+// As on the previous contact page: each profile with its real logo and handle.
+const PROFILES = [
+  { slug: "gmail", label: "Email", handle: SITE.email, href: `mailto:${SITE.email}` },
+  { slug: "github", label: "GitHub", handle: "@Jeff5812", href: SITE.links.github },
+  { slug: "x", label: "X", handle: "@rust_automates", href: SITE.links.x },
+  { slug: "upwork", label: "Upwork", handle: "View my profile", href: SITE.links.upwork },
+];
 
 export default function ContactPage() {
-  const { openChat } = useChat();
   return (
-    <main>
-      <Header onOpenChat={openChat} />
-      <Contact onOpenChat={openChat} />
-      <Footer />
-    </main>
+    <>
+      <PageHeader
+        eyebrow="Contact"
+        lead="Tell me what you're building or what's eating your team's time. I'll tell you honestly whether AI or automation is the right fix."
+      >
+        Let&rsquo;s build something that <em>doesn&rsquo;t guess</em>
+      </PageHeader>
+
+      <div className={`wrap ${s.grid}`}>
+        <div className={s.side} data-reveal>
+          <CopyEmail email={SITE.email} />
+          <ul role="list" className={s.profiles}>
+            {PROFILES.map((p) => (
+              <li key={p.slug}>
+                <a href={p.href} className={`glass ${s.profile}`}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={iconSrc(p.slug)} alt="" width={48} height={48} />
+                  <span>
+                    <strong>{p.label}</strong>
+                    <small>{p.handle}</small>
+                  </span>
+                  <Icon name="arrowUpRight" className={s.go} />
+                </a>
+              </li>
+            ))}
+          </ul>
+          <div className={`glass ${s.assist}`}>
+            <p>
+              <strong>Prefer to chat?</strong> My AI assistant can answer questions about my work and pass your details
+              on.
+            </p>
+            <AskButton intent="booking" className="btn btn-ghost">
+              Book through the assistant
+            </AskButton>
+          </div>
+          <p className={s.availability}>
+            <span className="status" data-state="ok">
+              {SITE.availability}
+            </span>
+          </p>
+        </div>
+
+        <div data-reveal>
+          <ContactForm />
+        </div>
+      </div>
+    </>
   );
 }

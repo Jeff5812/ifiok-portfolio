@@ -1,0 +1,313 @@
+.hero {
+  position: relative;
+  overflow-x: clip;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.04fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(24px, 4vw, 64px);
+  min-height: min(calc(100svh - var(--nav-h)), 880px);
+  padding-block: 24px 80px;
+}
+
+/* ---------- copy ---------- */
+/* Above the fold, so it animates on load with CSS alone: nothing waits for JavaScript. */
+.copy [data-enter] {
+  animation: enter 0.8s var(--ease) both;
+  animation-delay: var(--delay, 0ms);
+}
+
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
+.copy {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  position: relative;
+  z-index: 2;
+}
+
+.hello {
+  font-size: clamp(1.25rem, 1rem + 0.9vw, 1.75rem);
+  font-weight: 400;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+
+.hello span {
+  color: var(--orange);
+  font-weight: 600;
+}
+
+.title {
+  font-size: clamp(2.6rem, 1.1rem + 4.4vw, 5.25rem);
+  font-weight: 300;
+  line-height: 0.98;
+  letter-spacing: -0.05em;
+  margin-top: -10px;
+}
+
+/* "Software &" sits above the main line, smaller and in orange, so both roles read at once. */
+.titleSmall {
+  display: block;
+  margin-bottom: 0.12em;
+  font-size: 0.62em;
+  font-weight: 400;
+  letter-spacing: -0.035em;
+  color: var(--orange);
+}
+
+.sub {
+  max-width: 29em;
+  font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem);
+  color: var(--text-2);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.find {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px 18px;
+  padding-top: 24px;
+  border-top: 1px solid var(--stroke);
+  font-size: 0.875rem;
+  color: var(--text-3);
+}
+
+/* ---------- stage ---------- */
+.stage {
+  --px: 0;
+  --py: 0;
+  --k: 1;
+  position: relative;
+  width: 100%;
+  max-width: 560px;
+  aspect-ratio: 1;
+  justify-self: end;
+}
+
+.glow,
+.orbits,
+.figure,
+.orbitIcon {
+  transform: translate3d(calc(var(--px) * var(--d, 6) * 1px), calc(var(--py) * var(--d, 6) * 1px), 0);
+}
+
+.glow {
+  position: absolute;
+  inset: 18%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgb(255 106 43 / 0.22), transparent 68%);
+  filter: blur(24px);
+}
+
+.orbits {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.orbits circle {
+  fill: none;
+  stroke: rgb(255 214 190 / 0.09);
+  stroke-width: 1;
+}
+
+.figure {
+  position: absolute;
+  inset: 21%;
+}
+
+.medallion {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  padding: 2px;
+  background: linear-gradient(160deg, rgb(255 139 82 / 0.75), rgb(255 106 43 / 0.08) 45%, rgb(255 106 43 / 0.3));
+  box-shadow: 0 30px 60px -28px rgb(0 0 0 / 0.85), 0 0 0 8px rgb(255 236 224 / 0.02);
+}
+
+.medallion img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.badge {
+  position: absolute;
+  left: 50%;
+  bottom: -5%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--stroke-2);
+  background: rgb(22 12 8 / 0.82);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 10px 24px -14px rgb(0 0 0 / 0.8);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ok);
+}
+
+/* says hello when you point at the portrait */
+.bubble {
+  position: absolute;
+  top: -10%;
+  left: 50%;
+  translate: -50% 6px;
+  opacity: 0;
+  z-index: 6;
+  padding: 9px 15px;
+  border-radius: 16px 16px 16px 4px;
+  border: 1px solid var(--stroke-2);
+  background: rgb(22 12 8 / 0.9);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--text);
+  white-space: nowrap;
+  pointer-events: none;
+  transition: opacity 0.3s var(--ease), translate 0.4s var(--ease);
+}
+
+.figure:hover .bubble {
+  opacity: 1;
+  translate: -50% 0;
+}
+
+/* ---------- orbiting tools ---------- */
+.icons {
+  position: absolute;
+  inset: 0;
+}
+
+.orbitIcon {
+  position: absolute;
+  left: calc(var(--x) - 36px * var(--k));
+  top: calc(var(--y) - 36px * var(--k));
+  width: calc(72px * var(--k));
+  z-index: 3;
+}
+
+.orbitIcon a {
+  position: relative;
+  display: block;
+  border-radius: 22%;
+}
+
+/* a very slow, small drift: alive, not busy */
+.drift {
+  display: block;
+  animation: drift 11s ease-in-out infinite;
+  animation-delay: calc(var(--delay) * -1);
+}
+
+@keyframes drift {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.drift img {
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 12px 16px rgb(0 0 0 / 0.5));
+  transition: transform 0.35s var(--ease);
+}
+
+.orbitIcon a:hover .drift img,
+.orbitIcon a:focus-visible .drift img {
+  transform: translateY(-3px) scale(1.06);
+}
+
+.tip {
+  position: absolute;
+  left: 50%;
+  top: calc(100% + 10px);
+  transform: translate(-50%, 4px);
+  padding: 7px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--stroke-2);
+  background: rgb(22 12 8 / 0.94);
+  font-size: 0.8125rem;
+  color: var(--text-2);
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s var(--ease), transform 0.3s var(--ease);
+  z-index: 5;
+}
+
+.tip strong {
+  color: var(--orange-2);
+  margin-right: 4px;
+  font-weight: 500;
+}
+
+.orbitIcon a:hover .tip,
+.orbitIcon a:focus-visible .tip {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* ---------- responsive ---------- */
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: 1fr;
+    min-height: 0;
+    padding-top: 32px;
+  }
+
+  .stage {
+    justify-self: center;
+    max-width: 520px;
+    margin-top: 16px;
+  }
+}
+
+@media (max-width: 640px) {
+  .stage {
+    --k: 0.68;
+    width: 88%;
+  }
+
+  .badge {
+    font-size: 0.8125rem;
+  }
+
+  .tip {
+    display: none;
+  }
+}

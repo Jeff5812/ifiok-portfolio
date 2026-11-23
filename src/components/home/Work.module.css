@@ -1,0 +1,18 @@
+.list {
+  display: grid;
+  gap: 24px;
+}
+
+.more {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px 24px;
+  margin-top: 32px;
+}
+
+.more p {
+  max-width: 34em;
+  font-size: 0.975rem;
+  color: var(--text-3);
+}

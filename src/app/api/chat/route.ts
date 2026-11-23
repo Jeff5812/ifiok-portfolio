@@ -1,58 +1,63 @@
-import { NextRequest, NextResponse } from "next/server";
-import { SYSTEM_PROMPT } from "@/components/chat/chatData";
+import { assistantPrompt } from "@/lib/assistant-prompt";
 
-// Uses OpenAI's gpt-4o-mini — cheap enough for a portfolio chatbot's volume
-// (fractions of a cent per conversation). Swap the model/endpoint below if
-// you'd rather use Gemini or Claude instead.
-const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+// The portfolio assistant. OpenAI, as before, so the existing Vercel environment keeps working:
+// OPENAI_API_KEY (required) and OPENAI_MODEL (optional, defaults to the model the old site used).
+const MODEL = process.env.OPENAI_MODEL || "gpt-4o-mini";
+const MAX_MESSAGES = 10;
+const MAX_CHARS = 2000;
 
-type ChatMessage = { role: "user" | "assistant"; content: string };
+type Incoming = { role: "user" | "assistant"; content: string };
 
-export async function POST(req: NextRequest) {
+function valid(body: unknown): Incoming[] | null {
+  if (!body || typeof body !== "object") return null;
+  const raw = (body as { messages?: unknown }).messages;
+  if (!Array.isArray(raw) || raw.length === 0 || raw.length > 40) return null;
+  const out: Incoming[] = [];
+  for (const m of raw) {
+    if (!m || typeof m !== "object") return null;
+    const { role, content } = m as Record<string, unknown>;
+    if ((role !== "user" && role !== "assistant") || typeof content !== "string") return null;
+    const text = content.trim().slice(0, MAX_CHARS);
+    if (text) out.push({ role, content: text });
+  }
+  const recent = out.slice(-MAX_MESSAGES);
+  return recent.length > 0 && recent[recent.length - 1]!.role === "user" ? recent : null;
+}
+
+export async function POST(request: Request) {
+  const key = process.env.OPENAI_API_KEY;
+  if (!key) return Response.json({ error: "The assistant isn't configured." }, { status: 503 });
+
+  let messages: Incoming[] | null = null;
   try {
-    if (!OPENAI_API_KEY) {
-      return NextResponse.json({ error: "AI is not configured yet." }, { status: 500 });
-    }
+    messages = valid(await request.json());
+  } catch {
+    messages = null;
+  }
+  if (!messages) return Response.json({ error: "Send at least one user message." }, { status: 400 });
 
-    const { messages } = (await req.json()) as { messages: ChatMessage[] };
-
-    if (!messages || !Array.isArray(messages) || messages.length === 0) {
-      return NextResponse.json({ error: "No message provided" }, { status: 400 });
-    }
-
-    // Cap history sent to the model to keep costs/latency low.
-    const recent = messages.slice(-10);
-
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+  try {
+    const res = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${OPENAI_API_KEY}`,
-      },
+      headers: { "content-type": "application/json", authorization: `Bearer ${key}` },
       body: JSON.stringify({
-        model: "gpt-4o-mini",
-        max_tokens: 300,
-        temperature: 0.6,
-        messages: [{ role: "system", content: SYSTEM_PROMPT }, ...recent],
+        model: MODEL,
+        temperature: 0.4,
+        max_tokens: 400,
+        messages: [{ role: "system", content: assistantPrompt() }, ...messages],
       }),
+      signal: AbortSignal.timeout(25_000),
     });
-
-    if (!response.ok) {
-      const errText = await response.text();
-      console.error("OpenAI error:", errText);
-      return NextResponse.json({ error: "AI request failed" }, { status: 502 });
+    if (!res.ok) {
+      console.error("assistant: upstream", res.status, (await res.text()).slice(0, 300));
+      return Response.json({ error: "The AI service didn't answer." }, { status: 502 });
     }
-
-    const data = await response.json();
+    const data = (await res.json()) as { choices?: { message?: { content?: string } }[] };
     const reply = data.choices?.[0]?.message?.content?.trim();
-
-    if (!reply) {
-      return NextResponse.json({ error: "Empty response from AI" }, { status: 502 });
-    }
-
-    return NextResponse.json({ reply });
+    if (!reply) return Response.json({ error: "Empty answer." }, { status: 502 });
+    return Response.json({ reply });
   } catch (err) {
-    console.error("Chat API failed:", err);
-    return NextResponse.json({ error: "Something went wrong" }, { status: 500 });
+    console.error("assistant: failed", err instanceof Error ? err.name : "unknown");
+    return Response.json({ error: "The AI service didn't answer." }, { status: 502 });
   }
 }

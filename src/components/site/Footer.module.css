@@ -1,0 +1,57 @@
+.footer {
+  margin-top: clamp(96px, 12vw, 160px);
+  border-top: 1px solid var(--stroke);
+  padding-bottom: 96px; /* room for the assistant button */
+}
+
+.inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px 32px;
+  padding-block: 36px 24px;
+}
+
+.brand {
+  display: grid;
+  gap: 6px;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.logo span {
+  color: var(--orange);
+}
+
+.copy {
+  font-size: 0.875rem;
+  color: var(--text-3);
+}
+
+.copy a {
+  color: var(--text-2);
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 22px;
+}
+
+.nav a {
+  font-size: 0.9375rem;
+  color: var(--text-2);
+  text-decoration: none;
+  transition: color 0.25s var(--ease);
+}
+
+.nav a:hover {
+  color: var(--orange-2);
+}

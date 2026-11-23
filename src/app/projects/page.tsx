@@ -1,23 +1,77 @@
-"use client";
+import type { Metadata } from "next";
+import ProjectCard from "@/components/projects/ProjectCard";
+import Icon from "@/components/ui/Icon";
+import { ARCHIVE, PROJECTS } from "@/content/projects";
+import s from "./projects.module.css";
 
-import Header from "@/components/Header";
-import ProjectsSection from "@/components/ProjectsSection";
-import Footer from "@/components/Footer";
-import { useChat } from "@/context/ChatContext";
+export const metadata: Metadata = {
+  title: "Projects",
+  description:
+    "Every project by Ifiok Columba: software products (Chat Receipt, Mayor Edits) and AI automation systems, each with a full case study.",
+  alternates: { canonical: "/projects" },
+};
 
 export default function ProjectsPage() {
-  const { openChat } = useChat();
+  const groups = [
+    { id: "products", title: "Software products", lead: "Full-stack products with AI inside.", items: PROJECTS.filter((p) => p.group === "product") },
+    { id: "automation", title: "AI automation systems", lead: "Agents and workflows in n8n, Postgres and the messaging apps people already use.", items: PROJECTS.filter((p) => p.group === "automation") },
+  ];
+
   return (
-    <main>
-      <Header onOpenChat={openChat} />
-      <div className="mx-auto max-w-6xl px-6 pt-16">
-        <div className="label-mono text-brand-from">All projects</div>
-        <h1 className="mt-2 text-4xl font-extrabold tracking-tight md:text-5xl">
-          Every workflow I&apos;ve shipped
+    <div className="wrap">
+      <header className={s.head} data-reveal>
+        <p className="eyebrow">All projects</p>
+        <h1 className={s.title}>
+          Everything I&rsquo;ve <em>built</em>
         </h1>
-      </div>
-      <ProjectsSection onOpenChat={openChat} showHeader={false} />
-      <Footer />
-    </main>
+        <p className="lead">
+          {PROJECTS.length} projects, from live products to automation systems. Each card has the problem, what it does
+          and how it turned out; every one has a full case study, and you can ask the assistant about any of them.
+        </p>
+        <nav className={s.jump} aria-label="Jump to">
+          {groups.map((g) => (
+            <a key={g.id} href={`#${g.id}`}>
+              {g.title} <span>{g.items.length}</span>
+            </a>
+          ))}
+        </nav>
+      </header>
+
+      {groups.map((g) => (
+        <section key={g.id} id={g.id} className={s.group} aria-labelledby={`${g.id}-title`}>
+          <div className={s.groupHead} data-reveal>
+            <h2 id={`${g.id}-title`} className={s.groupTitle}>
+              {g.title}
+            </h2>
+            <p>{g.lead}</p>
+          </div>
+          <div className={s.list}>
+            {g.items.map((p, i) => (
+              <div key={p.slug} data-reveal>
+                <ProjectCard p={p} flip={i % 2 === 1} />
+              </div>
+            ))}
+          </div>
+        </section>
+      ))}
+
+      <section className={s.archive} aria-labelledby="archive-title" data-reveal>
+        <h2 id="archive-title" className={s.groupTitle}>
+          Also in the archive
+        </h2>
+        <ul role="list">
+          {ARCHIVE.map((a) => (
+            <li key={a.title}>
+              <a href={a.href} className="glass">
+                <strong>
+                  {a.title} <Icon name="arrowUpRight" />
+                </strong>
+                <span>{a.note}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    </div>
   );
 }

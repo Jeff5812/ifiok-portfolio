@@ -1,0 +1,144 @@
+.card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(20px, 3vw, 44px);
+  padding: clamp(14px, 1.6vw, 20px);
+  align-items: start;
+}
+
+.card[data-flip="true"] .media {
+  order: 2;
+}
+
+.media {
+  position: sticky;
+  top: calc(var(--nav-h) + 20px);
+  height: clamp(300px, 34vw, 460px);
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid var(--stroke);
+  background: #0b0b10;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 18px;
+  padding: clamp(8px, 1.4vw, 20px) clamp(4px, 1vw, 12px) clamp(8px, 1.4vw, 20px) 0;
+}
+
+.card[data-flip="true"] .body {
+  padding-left: clamp(4px, 1vw, 16px);
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+}
+
+.num {
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+  color: var(--orange-2);
+}
+
+.kind {
+  font-size: 0.875rem;
+  color: var(--text-3);
+}
+
+.title {
+  font-size: clamp(1.75rem, 1.3rem + 1.4vw, 2.5rem);
+  font-weight: 450;
+  letter-spacing: -0.035em;
+}
+
+.title a {
+  text-decoration: none;
+}
+
+.title a:hover {
+  color: var(--orange-2);
+}
+
+.tagline {
+  font-size: 1.125rem;
+  color: var(--text);
+  line-height: 1.5;
+}
+
+.block {
+  display: grid;
+  gap: 6px;
+  font-size: 0.975rem;
+  color: var(--text-2);
+}
+
+.label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--orange-2);
+}
+
+.features {
+  display: grid;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.features li {
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  gap: 10px;
+  align-items: start;
+}
+
+.check {
+  width: 20px;
+  height: 20px;
+  padding: 3px;
+  margin-top: 2px;
+  border-radius: 50%;
+  background: var(--orange-wash);
+  color: var(--orange-2);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.actions :global(.btn) {
+  min-height: 46px;
+  padding: 0 20px;
+  font-size: 0.9375rem;
+}
+
+@media (max-width: 1024px) {
+  .card {
+    grid-template-columns: 1fr;
+  }
+
+  .card[data-flip="true"] .media {
+    order: 0;
+  }
+
+  .media {
+    position: relative;
+    top: 0;
+    height: auto;
+    aspect-ratio: 16 / 10;
+  }
+
+  .body,
+  .card[data-flip="true"] .body {
+    padding: 4px 8px 12px;
+  }
+}

@@ -1,17 +1,20 @@
-"use client";
+import type { Metadata } from "next";
+import { About, ContactBand } from "@/components/home/Closing";
+import Method from "@/components/home/Method";
 
-import Header from "@/components/Header";
-import About from "@/components/About";
-import Footer from "@/components/Footer";
-import { useChat } from "@/context/ChatContext";
+export const metadata: Metadata = {
+  title: "About",
+  description:
+    "Ifiok Columba is a software and AI automation engineer based in Nigeria, working remotely: background, how he builds, certification and what he's working on now.",
+  alternates: { canonical: "/about" },
+};
 
 export default function AboutPage() {
-  const { openChat } = useChat();
   return (
-    <main>
-      <Header onOpenChat={openChat} />
-      <About />
-      <Footer />
-    </main>
+    <>
+      <About as="h1" />
+      <Method />
+      <ContactBand />
+    </>
   );
 }

@@ -1,0 +1,36 @@
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.logo,
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 12px 0 5px;
+  border-radius: 999px;
+  border: 1px solid var(--stroke);
+  background: var(--glass);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--text-2);
+}
+
+.chip {
+  padding: 0 14px;
+}
+
+.logo img {
+  width: 30px;
+  height: 30px;
+  filter: drop-shadow(0 4px 6px rgb(0 0 0 / 0.4));
+}
+
+
+.name {
+  color: var(--text);
+}

@@ -1,0 +1,33 @@
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px 48px;
+  margin-bottom: clamp(40px, 5vw, 64px);
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 18px;
+  max-width: 760px;
+}
+
+.lead {
+  max-width: 40em;
+}
+
+.aside {
+  flex: none;
+}
+
+.head[data-center="true"] {
+  justify-content: center;
+  text-align: center;
+}
+
+.head[data-center="true"] .main {
+  align-items: center;
+}

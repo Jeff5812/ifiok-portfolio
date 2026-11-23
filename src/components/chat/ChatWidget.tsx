@@ -1,420 +1,348 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { projects } from "@/content/projects";
-import { HOW_IT_WORKS, PROCESS_STEPS } from "./chatData";
+import { PROJECTS } from "@/content/projects";
+import { SITE } from "@/content/site";
+import { useChat } from "./ChatContext";
+import s from "./ChatWidget.module.css";
 
 type Msg = { from: "bot" | "user"; text: string };
-type Mode = "menu" | "menu-projects" | "project" | "booking" | "booking-done";
+type Mode = "menu" | "projects" | "project" | "booking" | "done";
 
-const BOOKING_WEBHOOK_URL = process.env.NEXT_PUBLIC_BOOKING_WEBHOOK_URL || "";
+const BOOKING = [
+  { key: "name", ask: "Nice! Let's get the basics so Ifiok can follow up properly. What's your name?", type: "text" },
+  { key: "email", ask: "And the best email to reach you?", type: "email" },
+  { key: "projectType", ask: "What kind of project is it?", type: "select" },
+  { key: "message", ask: "In a sentence or two, what do you need?", type: "text" },
+] as const;
 
-const BOOKING_FIELDS = [
-  { key: "name", label: "Your name", type: "text" as const },
-  { key: "email", label: "Your email", type: "email" as const },
-  {
-    key: "projectType",
-    label: "What kind of project is this?",
-    type: "select" as const,
-    options: [...projects.map((p) => p.title), "Something else"],
-  },
-  { key: "message", label: "A quick summary of what you need", type: "textarea" as const },
-];
+const PROJECT_TYPES = ["An AI product or web app", "A WhatsApp or Telegram assistant", "Workflow automation (n8n)", "A full-time or contract role", "Something else"];
 
-export default function ChatWidget({
-  open,
-  onClose,
-  intent,
-}: {
-  open: boolean;
-  onClose: () => void;
-  intent?: string | null;
-}) {
-  const [messages, setMessages] = useState<Msg[]>([]);
-  const [mode, setMode] = useState<Mode>("menu");
-  const [projectSlug, setProjectSlug] = useState<string | null>(null);
+const GREETING =
+  "Hi, I'm the IC Assistant. Ask me anything about Ifiok's work, how his systems work, or any of his projects. Or use the buttons to see what he's built or book a call.";
+
+function projectSummary(slug: string): Msg[] {
+  const p = PROJECTS.find((x) => x.slug === slug);
+  if (!p) return [];
+  return [
+    { from: "user", text: `Tell me about ${p.title}` },
+    {
+      from: "bot",
+      text: `**${p.title}** (${p.status.label})\n\n${p.tagline}\n\n**The problem:** ${p.problem}\n\n**The result:** ${p.outcome}\n\nFull write-up: /projects/${p.slug}`,
+    },
+  ];
+}
+
+function initial(intent: string | null): { messages: Msg[]; mode: Mode } {
+  const hello: Msg = { from: "bot", text: GREETING };
+  if (intent === "booking") {
+    return {
+      messages: [hello, { from: "user", text: "I'd like to work together" }, { from: "bot", text: BOOKING[0].ask }],
+      mode: "booking",
+    };
+  }
+  if (intent?.startsWith("project:")) {
+    return { messages: [hello, ...projectSummary(intent.slice(8))], mode: "project" };
+  }
+  return { messages: [hello], mode: "menu" };
+}
+
+/** Bold, paragraphs and site links; nothing else is interpreted. */
+function Rich({ text }: { text: string }) {
+  return (
+    <>
+      {text.split("\n").map((line, i) => (
+        <span key={i} className={s.line}>
+          {line.split(/(\*\*[^*]+\*\*|\/projects\/[a-z0-9-]+)/g).map((chunk, j) => {
+            if (chunk.startsWith("**") && chunk.endsWith("**")) return <strong key={j}>{chunk.slice(2, -2)}</strong>;
+            if (/^\/projects\/[a-z0-9-]+$/.test(chunk))
+              return (
+                <a key={j} href={chunk}>
+                  {chunk}
+                </a>
+              );
+            return <span key={j}>{chunk}</span>;
+          })}
+        </span>
+      ))}
+    </>
+  );
+}
+
+function Panel({ intent, hidden }: { intent: string | null; hidden: boolean }) {
+  const { closeChat } = useChat();
+  const [{ messages, mode }, setState] = useState(() => initial(intent));
   const [step, setStep] = useState(0);
-  const [bookingData, setBookingData] = useState<Record<string, string>>({});
-  const [inputValue, setInputValue] = useState("");
-  const [isTyping, setIsTyping] = useState(false);
+  const [booking, setBooking] = useState<Record<string, string>>({});
+  const [input, setInput] = useState("");
+  const [typing, setTyping] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const initializedRef = useRef(false);
-  const typingTimeoutRef = useRef<number | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const timer = useRef<number | null>(null);
 
-  useEffect(() => {
-    if (open && !initializedRef.current) {
-      initializedRef.current = true;
-      greet();
-      if (intent === "booking") startBooking();
-      else if (intent?.startsWith("project:")) {
-        const slug = intent.split(":")[1];
-        startProject(slug);
-      }
-    }
-    if (!open) initializedRef.current = false;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open]);
+  const setMessages = (fn: (m: Msg[]) => Msg[]) => setState((st) => ({ ...st, messages: fn(st.messages) }));
+  const setMode = (mode: Mode) => setState((st) => ({ ...st, mode }));
+  const push = (m: Msg) => setMessages((ms) => [...ms, m]);
+  const reply = (text: string, delay = 650) => {
+    if (timer.current) window.clearTimeout(timer.current);
+    setTyping(true);
+    timer.current = window.setTimeout(() => {
+      setTyping(false);
+      push({ from: "bot", text });
+    }, delay);
+  };
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
-  }, [messages, mode, step, isTyping]);
+  }, [messages, typing, mode]);
 
   useEffect(() => {
-    return () => {
-      if (typingTimeoutRef.current) {
-        clearTimeout(typingTimeoutRef.current);
-      }
-    };
+    if (!hidden) inputRef.current?.focus({ preventScroll: true });
+  }, [hidden, mode, step]);
+
+  useEffect(() => () => {
+    if (timer.current) window.clearTimeout(timer.current);
   }, []);
 
-  function pushBot(text: string) {
-    setMessages((m) => [...m, { from: "bot", text }]);
-  }
-  function pushUser(text: string) {
-    setMessages((m) => [...m, { from: "user", text }]);
-  }
-
-  function greet() {
-    setMessages([
-      {
-        from: "bot",
-        text:
-          "Hi, I'm the IC Assistant. Ask me anything about Ifiok, how his workflows work, or his past projects, or use the buttons below to see what he's built or start a project.",
-      },
-    ]);
-    setMode("menu");
-  }
-
-  function queueBotReply(text: string, delay = 700) {
-    if (typingTimeoutRef.current) {
-      clearTimeout(typingTimeoutRef.current);
-    }
-    setIsTyping(true);
-    typingTimeoutRef.current = window.setTimeout(() => {
-      setIsTyping(false);
-      pushBot(text);
-      typingTimeoutRef.current = null;
-    }, delay);
-  }
-
-  function backToMenu() {
-    queueBotReply("Sure, what would you like to do next?");
+  const toMenu = () => {
+    reply("Sure. What would you like to do next?");
     setMode("menu");
     setStep(0);
-  }
+  };
 
-  function startProject(slug: string) {
-    const p = projects.find((x) => x.slug === slug) ?? projects[0];
-    setProjectSlug(p.slug);
-    pushUser(`Tell me about "${p.title}"`);
-    queueBotReply(
-      `**${p.title}**\n\nIn plain terms: ${p.tagline}\n\nThe problem: ${p.problem}\n\nHow it works: ${p.solution}\n\nThe result: ${p.outcome}`
-    );
-    setMode("project");
-  }
-
-  function explainHowItWorks() {
-    pushUser("How does this actually work?");
-    queueBotReply(
-      HOW_IT_WORKS +
-        "\n\nHis usual process:\n" +
-        PROCESS_STEPS.map((s, i) => `${i + 1}. ${s}`).join("\n")
-    );
-    setMode("menu");
-  }
-
-  function startBooking() {
-    pushUser("I'd like to work together");
-    queueBotReply(
-      "Nice, let's get the basics so Ifiok can follow up properly. First, what's your name?"
-    );
-    setBookingData({});
+  const startBooking = () => {
+    push({ from: "user", text: "I'd like to work together" });
+    reply(BOOKING[0].ask);
+    setBooking({});
     setStep(0);
     setMode("booking");
-  }
+  };
 
-  async function submitBookingField(rawValue: string) {
-    const f = BOOKING_FIELDS[step];
-    const value = rawValue.trim();
-    if (!value) {
-      pushBot("I'll need something here to pass along, go ahead and fill this in.");
-      return;
-    }
-    pushUser(value);
-    const next = { ...bookingData, [f.key]: value };
-    setBookingData(next);
-    setInputValue("");
+  const showProject = (slug: string) => {
+    const [user, bot] = projectSummary(slug);
+    if (!user || !bot) return;
+    push(user);
+    reply(bot.text, 500);
+    setMode("project");
+  };
 
-    const nextIndex = step + 1;
-    if (nextIndex < BOOKING_FIELDS.length) {
-      setStep(nextIndex);
-      queueBotReply(BOOKING_FIELDS[nextIndex].label);
-    } else {
-      queueBotReply("Sending that over to Ifiok now…");
-      if (BOOKING_WEBHOOK_URL) {
-        try {
-          await fetch(BOOKING_WEBHOOK_URL, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(next),
-          });
-        } catch {
-          // fail silently
-        }
-      }
-      queueBotReply(
-        `Thanks, ${next.name.split(" ")[0]}, that's in. Ifiok will get back to you at ${next.email} within a day or two. If it's urgent, mention that in a follow-up message here.`
-      );
-      setMode("booking-done");
-    }
-  }
+  const howItWorks = () => {
+    push({ from: "user", text: "How does Ifiok build things?" });
+    reply(
+      "**The AI suggests; the code decides.** A model reads the message or screenshot and proposes what should happen. Code with no AI in it checks that against the rules, and the database enforces what can't be broken (like double bookings or overselling).\n\nWhen the system isn't sure, it asks the customer or hands the case to a person. Everything is measured with tests and evaluations, and each project says plainly how finished it is.\n\nHe builds with AI coding agents, writing the product's rules first and verifying their work with tests and live checks.",
+    );
+  };
 
-  async function handleFreeText(raw: string) {
+  const submitBooking = async (raw: string) => {
+    const field = BOOKING[step]!;
     const value = raw.trim();
     if (!value) return;
-    pushUser(value);
-    setInputValue("");
-
-    try {
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: [{ role: "user", content: value }] }),
-      });
-
-      if (!response.ok) throw new Error("Chat API failed");
-
-      const data = await response.json();
-      const reply = data.reply?.trim();
-
-      if (reply) {
-        queueBotReply(reply);
-      } else {
-        queueBotReply(
-          "I’m having trouble reaching the AI service right now. Please try again in a moment."
-        );
-      }
-    } catch {
-      queueBotReply(
-        "I’m having trouble reaching the AI service right now. Please try again in a moment."
-      );
+    if (field.type === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+      reply("That email doesn't look quite right. Could you check it?", 300);
+      return;
     }
-  }
+    push({ from: "user", text: value });
+    setInput("");
+    const next = { ...booking, [field.key]: value };
+    setBooking(next);
+    if (step + 1 < BOOKING.length) {
+      setStep(step + 1);
+      reply(BOOKING[step + 1]!.ask);
+      return;
+    }
+    setMode("done");
+    setTyping(true);
+    try {
+      const res = await fetch("/api/booking", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(next),
+      });
+      setTyping(false);
+      if (!res.ok) throw new Error(String(res.status));
+      push({
+        from: "bot",
+        text: `Thanks, ${next.name!.split(" ")[0]}. That's with Ifiok now, and he'll reply to ${next.email}. If it's urgent, you can also email ${SITE.email}.`,
+      });
+    } catch {
+      setTyping(false);
+      push({
+        from: "bot",
+        text: `Sorry, I couldn't send that just now, so nothing was delivered. Please email Ifiok directly at ${SITE.email} and he'll get back to you.`,
+      });
+    }
+  };
 
-  function renderMarkdownish(text: string) {
-    return text.split("\n").map((line, i) => (
-      <span key={i}>
-        {line.split(/(\*\*[^*]+\*\*)/g).map((chunk, j) =>
-          chunk.startsWith("**") && chunk.endsWith("**") ? (
-            <strong key={j}>{chunk.slice(2, -2)}</strong>
-          ) : (
-            <span key={j}>{chunk}</span>
-          )
-        )}
-        <br />
-      </span>
-    ));
-  }
+  const ask = async (raw: string) => {
+    const value = raw.trim();
+    if (!value) return;
+    const history = [...messages, { from: "user" as const, text: value }];
+    push({ from: "user", text: value });
+    setInput("");
+    setTyping(true);
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          messages: history.slice(-10).map((m) => ({ role: m.from === "bot" ? "assistant" : "user", content: m.text })),
+        }),
+      });
+      const data = (await res.json().catch(() => ({}))) as { reply?: string };
+      setTyping(false);
+      if (!res.ok || !data.reply) throw new Error("no reply");
+      push({ from: "bot", text: data.reply });
+    } catch {
+      setTyping(false);
+      push({
+        from: "bot",
+        text: `I can't reach the AI service right now. You can still browse the projects below, or email Ifiok at ${SITE.email}.`,
+      });
+    }
+  };
 
-  const currentBookingField = mode === "booking" ? BOOKING_FIELDS[step] : null;
-  const showFreeTextInput = mode === "menu" || mode === "menu-projects" || mode === "project" || mode === "booking-done";
+  const field = mode === "booking" ? BOOKING[step] : null;
 
   return (
-    <AnimatePresence>
-      {open && (
-        <motion.div
-          initial={{ opacity: 0, y: 24, scale: 0.97 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: 24, scale: 0.97 }}
-          transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-          style={{
-            position: "fixed",
-            bottom: "max(96px, calc(env(safe-area-inset-bottom) + 92px))",
-            right: "max(16px, env(safe-area-inset-right))",
-            left: "max(16px, env(safe-area-inset-left))",
-            maxHeight: "calc(100vh - 140px)",
-            zIndex: 2147482999,
-          }}
-          className="mx-auto flex h-[560px] max-w-sm flex-col overflow-hidden rounded-2xl border border-line bg-panel shadow-2xl sm:left-auto sm:w-[92vw]"
-          role="dialog"
-          aria-label="IC Assistant chat"
-        >
-          <div className="flex items-center justify-between border-b border-line bg-panel2 px-4 py-3">
-            <div className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-gradient text-xs font-bold text-white">
-                IC
-              </div>
-              <div>
-                <div className="text-sm font-semibold">IC Assistant</div>
-                <div className="text-[11px] text-inkSoft">Usually replies instantly</div>
-              </div>
-            </div>
-            <button
-              onClick={onClose}
-              aria-label="Close chat"
-              className="focus-ring rounded-md p-1 text-inkSoft hover:text-ink"
-            >
-              ✕
+    <div
+      className={s.panel}
+      role="dialog"
+      aria-label="IC Assistant"
+      hidden={hidden}
+      onKeyDown={(e) => e.key === "Escape" && closeChat()}
+    >
+      <header className={s.head}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/media/portrait-warm.webp" alt="" className={s.avatar} width={40} height={40} />
+        <div>
+          <p className={s.name}>IC Assistant</p>
+          <p className={s.sub}>
+            <span className={s.online} aria-hidden /> Answers about Ifiok&rsquo;s work
+          </p>
+        </div>
+        <button type="button" className={s.close} onClick={closeChat} aria-label="Close the assistant">
+          ✕
+        </button>
+      </header>
+
+      <div ref={scrollRef} className={s.messages} aria-live="polite">
+        {messages.map((m, i) => (
+          <p key={i} className={m.from === "bot" ? s.bot : s.user}>
+            <Rich text={m.text} />
+          </p>
+        ))}
+        {typing && (
+          <p className={`${s.bot} ${s.typing}`} aria-label="The assistant is typing">
+            <span />
+            <span />
+            <span />
+          </p>
+        )}
+      </div>
+
+      <div className={s.foot}>
+        {mode === "menu" && (
+          <div className={s.chips}>
+            <button type="button" onClick={() => { push({ from: "user", text: "Show me what you've built" }); reply("Here's what Ifiok has built. Pick one:", 350); setMode("projects"); }}>
+              See what he&rsquo;s built
+            </button>
+            <button type="button" onClick={howItWorks}>
+              How does he work?
+            </button>
+            <button type="button" className={s.primary} onClick={startBooking}>
+              Book a call
             </button>
           </div>
+        )}
 
-          <div ref={scrollRef} className="scrollbar-none flex-1 space-y-3 overflow-y-auto px-4 py-4">
-            {messages.map((m, i) => (
-              <div
-                key={i}
-                className={`max-w-[85%] rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed ${
-                  m.from === "bot"
-                    ? "bg-panel2 text-ink"
-                    : "ml-auto bg-brand-gradient text-white"
-                }`}
-              >
-                {renderMarkdownish(m.text)}
-              </div>
+        {mode === "projects" && (
+          <div className={s.chips}>
+            {PROJECTS.map((p) => (
+              <button key={p.slug} type="button" onClick={() => showProject(p.slug)}>
+                {p.title}
+              </button>
             ))}
-
-            {isTyping && (
-              <div className="max-w-[85%] rounded-2xl bg-panel2 px-3.5 py-2.5 text-sm text-ink">
-                <div className="flex items-center gap-2">
-                  <span className="text-[11px] font-medium uppercase tracking-[0.2em] text-inkSoft">
-                    IC Assistant is typing
-                  </span>
-                  <div className="flex items-center gap-1">
-                    {[0, 1, 2].map((dot) => (
-                      <motion.span
-                        key={dot}
-                        className="h-1.5 w-1.5 rounded-full bg-inkSoft"
-                        animate={{ y: [0, -3, 0] }}
-                        transition={{ duration: 0.5, repeat: Infinity, delay: dot * 0.12 }}
-                      />
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
+            <button type="button" onClick={toMenu}>
+              ← Back
+            </button>
           </div>
+        )}
 
-          <div className="border-t border-line p-3">
-            {mode === "menu" && (
-              <div className="flex flex-wrap gap-2">
-                <button
-                  className="btn-ghost focus-ring rounded-full border border-line px-3 py-1.5 text-xs"
-                  onClick={() => {
-                    pushUser("Show me what you've built");
-                    pushBot("Here's what I've shipped so far, pick one:");
-                    setMode("menu-projects");
-                  }}
-                >
-                  See what I&apos;ve built
-                </button>
-                <button
-                  onClick={explainHowItWorks}
-                  className="btn-ghost focus-ring rounded-full border border-line px-3 py-1.5 text-xs"
-                >
-                  How does this work?
-                </button>
-                <button
-                  onClick={startBooking}
-                  className="btn-primary focus-ring rounded-full px-3 py-1.5 text-xs font-medium text-white"
-                >
-                  Book a call
-                </button>
-              </div>
-            )}
-
-            {mode === "menu-projects" && (
-              <div className="flex flex-wrap gap-2">
-                {projects.map((p) => (
-                  <button
-                    key={p.slug}
-                    onClick={() => startProject(p.slug)}
-                    className="btn-ghost focus-ring rounded-full border border-line px-3 py-1.5 text-xs"
-                  >
-                    {p.title}
-                  </button>
-                ))}
-                <button onClick={backToMenu} className="btn-ghost focus-ring rounded-full border border-line px-3 py-1.5 text-xs">
-                  Back
-                </button>
-              </div>
-            )}
-
+        {(mode === "project" || mode === "done") && (
+          <div className={s.chips}>
             {mode === "project" && (
-              <div className="flex flex-wrap gap-2">
-                <button onClick={startBooking} className="btn-primary focus-ring rounded-full px-3 py-1.5 text-xs font-medium text-white">
-                  Book a call
-                </button>
-                <button onClick={backToMenu} className="btn-ghost focus-ring rounded-full border border-line px-3 py-1.5 text-xs">
-                  Back to menu
-                </button>
-              </div>
-            )}
-
-            {mode === "booking" && currentBookingField && currentBookingField.type === "select" && (
-              <div className="flex flex-wrap gap-2">
-                {currentBookingField.options!.map((opt) => (
-                  <button
-                    key={opt}
-                    onClick={() => submitBookingField(opt)}
-                    className="btn-ghost focus-ring rounded-full border border-line px-3 py-1.5 text-xs"
-                  >
-                    {opt}
-                  </button>
-                ))}
-              </div>
-            )}
-
-            {mode === "booking" && currentBookingField && currentBookingField.type !== "select" && (
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  submitBookingField(inputValue);
-                }}
-                className="flex gap-2"
-              >
-                <input
-                  autoFocus
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
-                  type={currentBookingField.type === "textarea" ? "text" : currentBookingField.type}
-                  placeholder={currentBookingField.label}
-                  className="focus-ring w-full rounded-full border border-line bg-panel2 px-3.5 py-2 text-sm outline-none placeholder:text-inkSoft"
-                />
-                <button type="submit" className="btn-primary focus-ring rounded-full px-4 py-2 text-xs font-medium text-white">
-                  Send
-                </button>
-              </form>
-            )}
-
-            {mode === "booking-done" && (
-              <button onClick={backToMenu} className="btn-ghost focus-ring rounded-full border border-line px-3 py-1.5 text-xs">
-                Back to menu
+              <button type="button" className={s.primary} onClick={startBooking}>
+                Book a call
               </button>
             )}
-
-            {showFreeTextInput && (
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  handleFreeText(inputValue);
-                }}
-                className="mt-2 flex gap-2"
-              >
-                <input
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
-                  type="text"
-                  placeholder="Or just type a question…"
-                  className="focus-ring w-full rounded-full border border-line bg-panel2 px-3.5 py-2 text-sm outline-none placeholder:text-inkSoft"
-                />
-                <button type="submit" className="btn-primary focus-ring rounded-full px-4 py-2 text-xs font-medium text-white">
-                  Ask
-                </button>
-              </form>
-            )}
+            <button type="button" onClick={() => { setMode("projects"); }}>
+              Other projects
+            </button>
+            <button type="button" onClick={toMenu}>
+              Menu
+            </button>
           </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+        )}
+
+        {field?.type === "select" ? (
+          <div className={s.chips}>
+            {PROJECT_TYPES.map((t) => (
+              <button key={t} type="button" onClick={() => submitBooking(t)}>
+                {t}
+              </button>
+            ))}
+          </div>
+        ) : (
+          <form
+            className={s.form}
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (mode === "booking") void submitBooking(input);
+              else void ask(input);
+            }}
+          >
+            <input
+              ref={inputRef}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              type={field?.type === "email" ? "email" : "text"}
+              placeholder={mode === "booking" ? "Type your answer…" : "Ask anything about Ifiok's work…"}
+              aria-label={mode === "booking" ? "Your answer" : "Your question"}
+              maxLength={mode === "booking" ? 600 : 500}
+            />
+            <button type="submit" aria-label="Send">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 3L10 14M21 3l-7 18-4-7-7-4z" />
+              </svg>
+            </button>
+          </form>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export default function ChatWidget() {
+  const { open, intent, nonce, toggleChat } = useChat();
+  const [mounted, setMounted] = useState(false);
+  if (open && !mounted) setMounted(true); // first open mounts the panel; it then stays, hidden, to keep the thread
+
+  return (
+    <div className={s.root}>
+      {mounted && <Panel key={nonce} intent={intent} hidden={!open} />}
+      <button
+        type="button"
+        className={s.trigger}
+        data-open={open}
+        onClick={toggleChat}
+        aria-label={open ? "Close the assistant" : "Open the AI assistant"}
+        aria-expanded={open}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/media/portrait-warm.webp" alt="" width={44} height={44} />
+        <span className={s.triggerText}>{open ? "Close" : "Ask my AI assistant"}</span>
+        <span className={s.ping} aria-hidden />
+      </button>
+    </div>
   );
 }
