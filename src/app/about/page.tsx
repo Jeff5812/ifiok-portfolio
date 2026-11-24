@@ -5,7 +5,7 @@ import Method from "@/components/home/Method";
 export const metadata: Metadata = {
   title: "About",
   description:
-    "Ifiok Columba is a software and AI automation engineer based in Nigeria, working remotely: background, how he builds, certification and what he's working on now.",
+    "Ifiok Columba is a software and AI automation engineer based in Nigeria who works remotely. His background, how he builds, and his certification.",
   alternates: { canonical: "/about" },
 };
 

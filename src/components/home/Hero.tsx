@@ -31,8 +31,8 @@ export default function Hero() {
             <span className={s.role}>Software &amp; AI automation engineer</span>
           </h1>
           <p className={s.sub} data-enter style={vars({ "--delay": "160ms" })}>
-            I build full-stack products and AI automations for real businesses. The AI suggests; the code makes sure
-            it&rsquo;s right.
+            I build web apps and AI automations that take repetitive work off a team&rsquo;s plate. The AI does the
+            reading, and my code checks its work before anything happens.
           </p>
           <div className={s.actions} data-enter style={vars({ "--delay": "240ms" })}>
             <AskButton intent="booking" className="btn btn-primary">
@@ -48,7 +48,7 @@ export default function Hero() {
           <span className={s.ring} aria-hidden />
           <div className={s.medallion}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/media/portrait-warm.webp" alt="Ifiok Columba" width={900} height={900} />
+            <img src="/media/portrait-warm.webp" alt="Ifiok Columba" width={1000} height={1000} />
           </div>
 
           <ul role="list" className={s.icons} aria-label="Tools I build with">

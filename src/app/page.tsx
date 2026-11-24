@@ -18,7 +18,7 @@ export default function Home() {
         <SectionTitle
           eyebrow="Services"
           id="services-title"
-          lead="What I can build for you. Every service maps to work you can inspect."
+          lead="What I can build for you. Each one links to a project where I've done it before."
           aside={
             <Link href="/services" className="btn btn-ghost">
               All services <Icon name="arrowRight" />

@@ -38,7 +38,7 @@ Same variables as the previous site (see `.env.example`):
 - `OPENAI_API_KEY`: the assistant. `OPENAI_MODEL` is optional and defaults to `gpt-4o-mini`.
 - `RESEND_API_KEY`, `BOOKING_NOTIFY_EMAIL`: the contact form and the assistant's "Book a call".
 
-Without them the site still works; the assistant and form say plainly that they can't send, and show the email.
+Without them the site still works; the assistant and form say clearly that they can't send, and show the email.
 
 ## Develop
 

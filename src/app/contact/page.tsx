@@ -27,9 +27,9 @@ export default function ContactPage() {
     <>
       <PageHeader
         eyebrow="Contact"
-        lead="Tell me what you're building or what's eating your team's time. I'll tell you honestly whether AI or automation is the right fix."
+        lead="Tell me what you're building, or what's taking up your team's time. If AI or automation isn't the right fix, I'll tell you."
       >
-        Let&rsquo;s build something that <em>doesn&rsquo;t guess</em>
+        Get in <em>touch</em>
       </PageHeader>
 
       <div className={`wrap ${s.grid}`}>
@@ -52,11 +52,11 @@ export default function ContactPage() {
           </ul>
           <div className={`glass ${s.assist}`}>
             <p>
-              <strong>Prefer to chat?</strong> My AI assistant can answer questions about my work and pass your details
-              on.
+              <strong>Prefer to chat?</strong> IC, my AI assistant, can answer questions about my work and pass your
+              details to me.
             </p>
             <AskButton intent="booking" className="btn btn-ghost">
-              Book through the assistant
+              Book a call with IC
             </AskButton>
           </div>
           <p className={s.availability}>

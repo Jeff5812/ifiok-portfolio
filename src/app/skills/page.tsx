@@ -7,7 +7,7 @@ import SectionTitle from "@/components/ui/SectionTitle";
 export const metadata: Metadata = {
   title: "Skills",
   description:
-    "Ifiok Columba's skills in software engineering, AI engineering and automation, each linked to the project that proves it, and the tools behind them.",
+    "Ifiok Columba's skills in software engineering, AI engineering and automation, each linked to a project where he used it, plus the tools he works with.",
   alternates: { canonical: "/skills" },
 };
 
@@ -16,7 +16,7 @@ export default function SkillsPage() {
     <>
       <PageHeader
         eyebrow="Skills"
-        lead="Software engineering and AI automation, side by side. Every skill links to the project that proves it."
+        lead="What I do on the software side and the automation side. Each skill links to a project where I used it."
       >
         What I <em>work with</em>
       </PageHeader>
@@ -29,9 +29,9 @@ export default function SkillsPage() {
         <SectionTitle
           eyebrow="Tools"
           id="stack-title"
-          lead="Pick a tool to see where I've used it, or a project to see what it's made of."
+          lead="Pick a tool to see where I've used it, or pick a project to see what went into it."
         >
-          The tools <em>behind the work</em>
+          Tools I <em>use</em>
         </SectionTitle>
         <div data-reveal>
           <StackExplorer />

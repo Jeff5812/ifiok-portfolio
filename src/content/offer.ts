@@ -27,7 +27,7 @@ export const SKILLS: SkillGroup[] = [
     items: [
       { name: "LLM integration (Claude, Gemini, OpenAI)", project: "chat-receipt" },
       { name: "AI evaluation on held-out data", project: "chat-receipt" },
-      { name: "Guardrails: the model proposes, rules decide", project: "chat-receipt" },
+      { name: "Guardrails that keep the model in check", project: "chat-receipt" },
       { name: "RAG pipelines & vector search (pgvector)", project: "stripe-docs-support-bot" },
       { name: "AI agents & MCP tool servers", project: "meridian-scheduling-agent" },
       { name: "Structured output & confidence gates", project: "loan-collections-router" },
@@ -54,41 +54,41 @@ export const SERVICES: Service[] = [
   {
     title: "AI-powered web apps",
     description:
-      "Full products with AI inside: a FastAPI or Next.js app on Postgres, where the code and the database enforce the rules and the AI reads, suggests and explains.",
+      "Full web apps with AI built in, using FastAPI or Next.js on Postgres. The AI reads and suggests, and the code and database make sure the rules are followed.",
     icon: "nextdotjs",
     project: "chat-receipt",
   },
   {
     title: "WhatsApp & Telegram assistants",
     description:
-      "Assistants that book appointments, read deals or answer questions on WhatsApp and Telegram, and hand over to a person when they're unsure.",
+      "Assistants that book appointments, read deals or answer questions on WhatsApp and Telegram, and pass the chat to a person when they're not sure.",
     icon: "whatsapp",
     project: "meridian-scheduling-agent",
   },
   {
     title: "Workflow automation",
     description:
-      "n8n workflows that take over multi-step manual processes, with retries, error alerts, and escalation to a person where it matters.",
+      "n8n workflows that take over repetitive, multi-step work, with retries, error alerts and a person in the loop where it matters.",
     icon: "n8n",
     project: "lab-results-follow-up",
   },
   {
     title: "AI agents & integrations",
     description:
-      "Connecting Claude, Gemini or OpenAI to your calendar, database and messaging, through tools the model can call but not abuse.",
+      "I connect Claude, Gemini or OpenAI to your calendar, database and messaging apps, through tools the model can use but can't misuse.",
     icon: "claude",
     project: "loan-collections-router",
   },
   {
     title: "Document & data pipelines",
     description:
-      "Invoices, chats and forms turned into validated records, with the arithmetic re-checked in code and duplicates caught before they cost money.",
+      "Turning invoices, chats and forms into clean records, with the math re-checked in code and duplicates caught before they cost you money.",
     icon: "googlesheets",
     project: "invoice-intake-anomaly-detection",
   },
   {
     title: "Knowledge assistants (RAG)",
-    description: "Bots that answer from your own documents, and say plainly when the documents don't cover the question.",
+    description: "Bots that answer questions from your own documents, and say so when the answer isn't in them.",
     icon: "postgresql",
     project: "stripe-docs-support-bot",
   },

@@ -10,7 +10,7 @@ type Msg = { from: "bot" | "user"; text: string };
 type Mode = "menu" | "projects" | "project" | "booking" | "done";
 
 const BOOKING = [
-  { key: "name", ask: "Nice! Let's get the basics so Ifiok can follow up properly. What's your name?", type: "text" },
+  { key: "name", ask: "Great! I just need a few details so Ifiok can get back to you. What's your name?", type: "text" },
   { key: "email", ask: "And the best email to reach you?", type: "email" },
   { key: "projectType", ask: "What kind of project is it?", type: "select" },
   { key: "message", ask: "In a sentence or two, what do you need?", type: "text" },
@@ -19,7 +19,7 @@ const BOOKING = [
 const PROJECT_TYPES = ["An AI product or web app", "A WhatsApp or Telegram assistant", "Workflow automation (n8n)", "A full-time or contract role", "Something else"];
 
 const GREETING =
-  "Hi, I'm IC, Ifiok's AI assistant. Ask me anything about his work, how his systems work, or any of his projects. Or use the buttons to see what he's built or book a call.";
+  "Hi, I'm IC, Ifiok's AI assistant. Ask me about his projects or how he builds things, or tap a button below to see his work or book a call.";
 
 function projectSummary(slug: string): Msg[] {
   const p = PROJECTS.find((x) => x.slug === slug);
@@ -129,7 +129,7 @@ function Panel({ intent, hidden }: { intent: string | null; hidden: boolean }) {
   const howItWorks = () => {
     push({ from: "user", text: "How does Ifiok build things?" });
     reply(
-      "**The AI suggests; the code decides.** A model reads the message or screenshot and proposes what should happen. Code with no AI in it checks that against the rules, and the database enforces what can't be broken (like double bookings or overselling).\n\nWhen the system isn't sure, it asks the customer or hands the case to a person. Everything is measured with tests and evaluations, and each project says plainly how finished it is.\n\nHe builds with AI coding agents, writing the product's rules first and verifying their work with tests and live checks.",
+      "**The AI suggests, his code decides.** A model reads the message or screenshot and suggests what should happen. Plain code then checks that against the rules, and the database blocks anything that should never happen, like a double booking.\n\nWhen the system isn't sure, it asks the customer or passes the case to a person. He tests everything, and each project says how finished it is.\n\nHe also builds with AI coding agents. He writes the product's rules first, then checks their work with tests and live checks.",
     );
   };
 
@@ -162,13 +162,13 @@ function Panel({ intent, hidden }: { intent: string | null; hidden: boolean }) {
       if (!res.ok) throw new Error(String(res.status));
       push({
         from: "bot",
-        text: `Thanks, ${next.name!.split(" ")[0]}. That's with Ifiok now, and he'll reply to ${next.email}. If it's urgent, you can also email ${SITE.email}.`,
+        text: `Thanks, ${next.name!.split(" ")[0]}! Ifiok has your details and will reply to ${next.email}. If it's urgent, you can email him at ${SITE.email}.`,
       });
     } catch {
       setTyping(false);
       push({
         from: "bot",
-        text: `Sorry, I couldn't send that just now, so nothing was delivered. Please email Ifiok directly at ${SITE.email} and he'll get back to you.`,
+        text: `Sorry, that didn't go through. Please email Ifiok directly at ${SITE.email} and he'll get back to you.`,
       });
     }
   };
@@ -196,7 +196,7 @@ function Panel({ intent, hidden }: { intent: string | null; hidden: boolean }) {
       setTyping(false);
       push({
         from: "bot",
-        text: `I can't reach the AI service right now. You can still browse the projects below, or email Ifiok at ${SITE.email}.`,
+        text: `I can't reach the AI right now. You can still use the buttons below to see his projects, or email him at ${SITE.email}.`,
       });
     }
   };

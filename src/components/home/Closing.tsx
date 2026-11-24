@@ -18,8 +18,8 @@ export function About({ as: Heading = "h2" }: { as?: "h1" | "h2" }) {
             <Image
               src="/media/portrait.webp"
               alt="Ifiok Columba"
-              width={820}
-              height={1025}
+              width={1003}
+              height={1254}
               sizes="(max-width: 900px) 90vw, 460px"
               priority={Heading === "h1"}
             />
@@ -30,18 +30,19 @@ export function About({ as: Heading = "h2" }: { as?: "h1" | "h2" }) {
           <div data-reveal>
             <p className="eyebrow">About me</p>
             <Heading id="about-title" className={`h2 ${s.aboutTitle}`}>
-              I build for the <em>conditions I know</em>
+              A little about <em>me</em>
             </Heading>
           </div>
           <p className="lead" data-reveal>
-            I&rsquo;m Ifiok Columba, a software and AI automation engineer based in Nigeria, working remotely. Most of
-            what I build is shaped by where I build it: WhatsApp-first businesses, prices in naira, customers who write
-            in Pidgin, free-tier infrastructure and connections that drop.
+            I&rsquo;m Ifiok Columba, a software and AI automation engineer based in Nigeria, and I work remotely. A lot
+            of what I build comes from what I see around me: businesses that run on WhatsApp, prices in naira,
+            customers who chat in Pidgin, free-tier servers and internet that keeps dropping.
           </p>
           <p data-reveal>
-            Before software, I trained as a nurse. In 2026 I completed TechCrush&rsquo;s AI Automation programme, and
-            I&rsquo;ve kept going from workflows into full products: Python and TypeScript services, Postgres schemas that
-            enforce their own rules, and evaluations that check the AI before anyone relies on it.
+            Before tech, I trained as a nurse. In 2026 I finished TechCrush&rsquo;s AI Automation program, and since then
+            I&rsquo;ve gone from building workflows to building full products, with Python and TypeScript backends,
+            Postgres databases that enforce their own rules, and evaluations that check the AI before anyone relies on
+            it.
           </p>
           <ul role="list" className={s.facts} data-reveal>
             {FACTS.map((f) => (
@@ -62,7 +63,7 @@ export function About({ as: Heading = "h2" }: { as?: "h1" | "h2" }) {
             </div>
             <div>
               <p className={s.certTitle}>AI Automation · TechCrush</p>
-              <p className={s.certMeta}>15-week programme · issued 31 August 2026</p>
+              <p className={s.certMeta}>15-week program · issued 31 August 2026</p>
               <p className={s.certMeta}>Credential TEC-6BF8BE3F</p>
             </div>
           </div>
@@ -79,9 +80,9 @@ export function ContactBand() {
       <div className={`glass ${s.band}`} data-reveal>
         <div>
           <h2 id="band-title" className={`h2 ${s.bandTitle}`}>
-            Let&rsquo;s build something that <em>doesn&rsquo;t guess</em>
+            Have a project <em>in mind?</em>
           </h2>
-          <p className={s.bandText}>{SITE.availability}.</p>
+          <p className={s.bandText}>{SITE.availability}. Tell me what you need and I&rsquo;ll get back to you.</p>
         </div>
         <div className={s.bandActions}>
           <AskButton intent="booking" className="btn btn-primary">

@@ -30,14 +30,14 @@ export default function ContactForm() {
       if (!res.ok) throw new Error(String(res.status));
       setStatus({ kind: "sent", name: (body.name ?? "").split(" ")[0] ?? "" });
     } catch {
-      setStatus({ kind: "error", message: `That didn't send, so nothing was delivered. Please email ${SITE.email} instead.` });
+      setStatus({ kind: "error", message: `Sorry, that didn't send. Please email me at ${SITE.email} instead.` });
     }
   }
 
   if (status.kind === "sent") {
     return (
       <div className={`glass ${s.done}`} role="status">
-        <p className={s.doneTitle}>Thanks{status.name ? `, ${status.name}` : ""}. It&rsquo;s sent.</p>
+        <p className={s.doneTitle}>Thanks{status.name ? `, ${status.name}` : ""}! Your message is on its way.</p>
         <p>I&rsquo;ll reply by email, usually within a day or two.</p>
       </div>
     );

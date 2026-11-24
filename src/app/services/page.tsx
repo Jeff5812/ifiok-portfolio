@@ -17,7 +17,7 @@ export default function ServicesPage() {
     <>
       <PageHeader
         eyebrow="Services"
-        lead="What I can build for you. Every service maps to a project you can inspect, so you can see how I'd approach yours."
+        lead="Here's what I can build for you. Each service links to a project where I've done it before, so you can see how I'd approach yours."
         actions={
           <AskButton intent="booking" className="btn btn-primary">
             Book a call <Icon name="arrowRight" />

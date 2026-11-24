@@ -89,7 +89,7 @@ export default async function CaseStudyPage({ params }: Params) {
               </a>
             )}
             <AskButton intent={`project:${p.slug}`}>
-              <Icon name="spark" /> Ask the assistant
+              <Icon name="spark" /> Ask IC about it
             </AskButton>
           </div>
           <StackChips stack={p.stack} />
@@ -215,18 +215,20 @@ export default async function CaseStudyPage({ params }: Params) {
             {cs.futureImprovements.length > 0 ? (
               <List items={cs.futureImprovements} />
             ) : (
-              <p>Kept deliberately small: new features wait for a concrete reason from the client.</p>
+              <p>I&rsquo;m keeping it small on purpose. New features get added when the client needs them.</p>
             )}
           </section>
 
           <section className={`glass ${s.cta}`} data-reveal>
             <h2 className={s.ctaTitle}>Have something like this in mind?</h2>
-            <p>Tell me about it, or ask the assistant anything about how {p.title} works.</p>
+            <p>Tell me about it, or ask IC, my AI assistant, anything about how {p.title} works.</p>
             <div className={s.actions}>
               <AskButton intent="booking" className="btn btn-primary">
                 Book a call <Icon name="arrowRight" />
               </AskButton>
-              <AskButton intent={`project:${p.slug}`}>Ask about {p.title}</AskButton>
+              <AskButton intent={`project:${p.slug}`}>
+                <Icon name="spark" /> Ask IC about it
+              </AskButton>
             </div>
           </section>
         </div>

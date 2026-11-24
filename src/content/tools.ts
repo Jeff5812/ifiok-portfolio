@@ -20,7 +20,7 @@ const ALL_N8N = [
 
 export const TOOLS: Tool[] = [
   { slug: "n8n", name: "n8n", role: "Workflow orchestration", usedIn: ALL_N8N },
-  { slug: "claude", name: "Claude", role: "Extraction, and the coding agent I build with", usedIn: ["chat-receipt"] },
+  { slug: "claude", name: "Claude", role: "Reading screenshots, and my coding agent", usedIn: ["chat-receipt"] },
   {
     slug: "googlegemini",
     name: "Gemini",
@@ -32,7 +32,7 @@ export const TOOLS: Tool[] = [
   {
     slug: "postgresql",
     name: "PostgreSQL",
-    role: "The rules that can't be argued with",
+    role: "Databases, and rules the app can't break",
     usedIn: ["chat-receipt", "meridian-scheduling-agent", "stripe-docs-support-bot", "lab-results-follow-up", "loan-collections-router"],
   },
   {
@@ -43,19 +43,19 @@ export const TOOLS: Tool[] = [
   },
   { slug: "nextdotjs", name: "Next.js", role: "Web apps", usedIn: ["chat-receipt", "mayor-edits"] },
   { slug: "fastapi", name: "FastAPI", role: "APIs and webhooks", usedIn: ["chat-receipt"] },
-  { slug: "whatsapp", name: "WhatsApp", role: "Where the customers are", usedIn: ["chat-receipt", "loan-collections-router"] },
+  { slug: "whatsapp", name: "WhatsApp", role: "Customer chats and bots", usedIn: ["chat-receipt", "loan-collections-router"] },
   { slug: "telegram", name: "Telegram", role: "Bots and agents", usedIn: ["meridian-scheduling-agent", "stripe-docs-support-bot"] },
   { slug: "cloudflare", name: "Cloudflare", role: "R2 storage, Workers AI", usedIn: ["mayor-edits"] },
   { slug: "vercel", name: "Vercel", role: "Hosting", usedIn: ["chat-receipt", "mayor-edits"] },
   { slug: "docker", name: "Docker", role: "Packaging and self-hosting", usedIn: ["chat-receipt"] },
   { slug: "huggingface", name: "Hugging Face", role: "Embeddings", usedIn: ["stripe-docs-support-bot"] },
   { slug: "googlecalendar", name: "Google Calendar", role: "Bookings", usedIn: ["meridian-scheduling-agent"] },
-  { slug: "googlesheets", name: "Google Sheets", role: "Lightweight ledgers and logs", usedIn: ["stripe-docs-support-bot", "invoice-intake-anomaly-detection", "ai-lead-scoring-and-routing"] },
+  { slug: "googlesheets", name: "Google Sheets", role: "Simple logs and ledgers", usedIn: ["stripe-docs-support-bot", "invoice-intake-anomaly-detection", "ai-lead-scoring-and-routing"] },
   { slug: "gmail", name: "Gmail", role: "Intake, alerts and escalations", usedIn: ["lab-results-follow-up", "loan-collections-router", "invoice-intake-anomaly-detection", "ai-lead-scoring-and-routing"] },
   {
     slug: "github",
     name: "GitHub",
-    role: "Everything, in the open",
+    role: "All my code, in public",
     usedIn: ["chat-receipt", "mayor-edits", "meridian-scheduling-agent", "stripe-docs-support-bot", "lab-results-follow-up", "loan-collections-router", "invoice-intake-anomaly-detection", "ai-lead-scoring-and-routing"],
   },
 ];

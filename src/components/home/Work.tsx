@@ -14,7 +14,7 @@ export default function Work() {
       <SectionTitle
         eyebrow="Projects"
         id="work-title"
-        lead="Software products and AI automation systems. Each one says plainly how finished it is."
+        lead="Software products and AI automations. Each one tells you how far along it is."
         aside={
           <Link href="/projects" className="btn btn-ghost">
             View all {PROJECTS.length} projects <Icon name="arrowRight" />
@@ -36,7 +36,7 @@ export default function Work() {
         <Link href="/projects" className="btn btn-primary">
           See all {PROJECTS.length} projects <Icon name="arrowRight" />
         </Link>
-        <p>Also: {rest.map((p) => p.title).join(", ")}.</p>
+        <p>Also on the projects page: {rest.map((p) => p.title).join(", ")}.</p>
       </div>
     </section>
   );

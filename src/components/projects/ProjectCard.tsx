@@ -62,7 +62,7 @@ export default function ProjectCard({ p, flip = false }: { p: Project; flip?: bo
             Read case study <Icon name="arrowRight" />
           </Link>
           <AskButton intent={`project:${p.slug}`}>
-            <Icon name="spark" /> Ask the assistant
+            <Icon name="spark" /> Ask IC about it
           </AskButton>
           {p.links.live && (
             <a href={p.links.live} className="btn btn-ghost">

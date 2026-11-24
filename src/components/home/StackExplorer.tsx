@@ -74,7 +74,7 @@ export default function StackExplorer() {
               <strong>{pickedProject.title}</strong> uses {count} of these tools
             </>
           ) : (
-            <>Pick a tool to see where I&rsquo;ve used it, or a project to see what it&rsquo;s made of.</>
+            <>Pick a tool to see where I&rsquo;ve used it, or pick a project to see what went into it.</>
           )}
         </p>
         <ul role="list" className={s.projects}>
