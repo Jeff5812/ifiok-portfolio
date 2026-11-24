@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import AskButton from "@/components/chat/AskButton";
-import RouterDemo from "@/components/demos/RouterDemo";
 import Icon from "@/components/ui/Icon";
 import Lightbox from "@/components/ui/Lightbox";
 import StackChips from "@/components/ui/StackChips";
@@ -52,7 +51,6 @@ export default async function CaseStudyPage({ params }: Params) {
   const sections = [
     { id: "status", title: "Project status" },
     { id: "architecture", title: "Architecture" },
-    ...(p.slug === "loan-collections-router" ? [{ id: "demo", title: "Try the router" }] : []),
     { id: "decisions", title: "Engineering decisions" },
     { id: "challenges", title: "Challenges" },
     { id: "failure", title: "When things fail" },
@@ -96,7 +94,7 @@ export default async function CaseStudyPage({ params }: Params) {
           </div>
           <StackChips stack={p.stack} />
         </div>
-        <div className={s.hero} data-reveal>
+        <div className={s.hero} data-group={p.group} data-reveal>
           {p.image && (
             <Lightbox
               src={p.image.src}
@@ -168,17 +166,6 @@ export default async function CaseStudyPage({ params }: Params) {
               </figure>
             ))}
           </section>
-
-          {p.slug === "loan-collections-router" && (
-            <section id="demo" className={s.section} data-reveal>
-              <h2 className={s.h2}>Try the router</h2>
-              <p>
-                The workflow&rsquo;s decision path, running in your browser: pick an account, then change what the AI
-                read and watch where the code sends it.
-              </p>
-              <RouterDemo />
-            </section>
-          )}
 
           <section id="decisions" className={s.section} data-reveal>
             <h2 className={s.h2}>Engineering decisions</h2>

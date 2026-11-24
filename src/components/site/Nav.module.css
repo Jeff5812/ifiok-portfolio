@@ -2,12 +2,12 @@
   position: sticky;
   top: 0;
   z-index: 60;
-  transition: background-color 0.35s var(--ease), border-color 0.35s var(--ease), backdrop-filter 0.35s var(--ease);
   border-bottom: 1px solid transparent;
+  transition: background-color 0.35s var(--ease), border-color 0.35s var(--ease);
 }
 
 .bar[data-scrolled="true"] {
-  background: rgb(14 8 6 / 0.72);
+  background: rgb(14 8 6 / 0.78);
   border-bottom-color: var(--stroke);
   backdrop-filter: blur(16px) saturate(140%);
   -webkit-backdrop-filter: blur(16px) saturate(140%);
@@ -21,19 +21,30 @@
   gap: 24px;
 }
 
+/* ---------- logo: the IC tile and the full name ---------- */
 .logo {
   justify-self: start;
-  font-size: 1.625rem;
-  font-weight: 600;
-  letter-spacing: -0.04em;
-  color: var(--text);
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
   text-decoration: none;
 }
 
-.logo span {
-  color: var(--orange);
+.logo img {
+  width: 40px;
+  height: 40px;
+  filter: drop-shadow(0 6px 10px rgb(0 0 0 / 0.45));
 }
 
+.logo span {
+  font-size: var(--fs-md);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-tight);
+  color: var(--text);
+  white-space: nowrap;
+}
+
+/* ---------- pages ---------- */
 .pill {
   padding: 6px;
   border: 1px solid var(--stroke-2);
@@ -52,8 +63,8 @@
   display: block;
   padding: 9px 18px;
   border-radius: 999px;
-  font-size: 0.9375rem;
-  font-weight: 450;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
   color: var(--text-2);
   text-decoration: none;
   transition: color 0.25s var(--ease), background-color 0.25s var(--ease);
@@ -68,17 +79,44 @@
   background: var(--orange-wash);
 }
 
-.cta {
+/* ---------- the assistant ---------- */
+.right {
   justify-self: end;
-  min-height: 46px;
-  padding: 0 22px;
-  border-color: color-mix(in srgb, var(--orange) 55%, transparent);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.assistant {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 48px;
+  padding: 0 18px 0 7px;
+  border-radius: 999px;
+  border: 1px solid var(--stroke-2);
+  background: var(--glass);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
   color: var(--text);
+  cursor: pointer;
+  transition: border-color 0.25s var(--ease), background-color 0.25s var(--ease);
+}
+
+.assistant img {
+  width: 34px;
+  height: 34px;
+  filter: drop-shadow(0 4px 6px rgb(0 0 0 / 0.4));
+}
+
+.assistant:hover,
+.assistant[aria-expanded="true"] {
+  border-color: rgb(255 106 43 / 0.6);
+  background: var(--orange-wash);
 }
 
 .burger {
   display: none;
-  justify-self: end;
   width: 48px;
   height: 48px;
   border-radius: 50%;
@@ -119,13 +157,18 @@
   display: none;
 }
 
+@media (max-width: 1120px) {
+  .logo span {
+    display: none;
+  }
+}
+
 @media (max-width: 900px) {
   .inner {
     grid-template-columns: 1fr auto;
   }
 
-  .pill,
-  .cta {
+  .pill {
     display: none;
   }
 
@@ -133,10 +176,22 @@
     display: block;
   }
 
+  .logo span {
+    display: inline;
+  }
+
+  .assistant {
+    width: 48px;
+    padding: 0;
+    justify-content: center;
+  }
+
+  .assistantText {
+    display: none;
+  }
+
   .sheet:not([hidden]) {
-    display: flex;
-    flex-direction: column;
-    gap: 32px;
+    display: block;
     position: fixed;
     inset: var(--nav-h) 0 0 0;
     padding: 24px var(--margin) 48px;
@@ -146,24 +201,34 @@
 
   .sheet li {
     border-bottom: 1px solid var(--stroke);
-    animation: rise 0.5s var(--ease) both;
-    animation-delay: calc(var(--i) * 50ms);
+    animation: rise 0.45s var(--ease) both;
+    animation-delay: calc(var(--i) * 40ms);
   }
 
   .sheet li a {
     display: block;
     padding: 18px 0;
-    font-size: 2rem;
-    font-weight: 400;
-    letter-spacing: -0.03em;
+    font-size: var(--fs-xl);
+    font-weight: var(--fw-regular);
+    letter-spacing: var(--ls-title);
     color: var(--text);
     text-decoration: none;
+  }
+
+  .sheet li a[aria-current="page"] {
+    color: var(--orange-2);
+  }
+}
+
+@media (max-width: 420px) {
+  .logo span {
+    font-size: var(--fs-base);
   }
 }
 
 @keyframes rise {
   from {
     opacity: 0;
-    transform: translateY(12px);
+    transform: translateY(10px);
   }
 }

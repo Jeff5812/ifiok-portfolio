@@ -1,7 +1,7 @@
 .footer {
   margin-top: clamp(96px, 12vw, 160px);
   border-top: 1px solid var(--stroke);
-  padding-bottom: 96px; /* room for the assistant button */
+  padding-bottom: 32px;
 }
 
 .inner {
@@ -19,19 +19,23 @@
 }
 
 .logo {
-  font-size: 1.5rem;
-  font-weight: 600;
-  letter-spacing: -0.04em;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-size: var(--fs-md);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-tight);
   color: var(--text);
   text-decoration: none;
 }
 
-.logo span {
-  color: var(--orange);
+.logo img {
+  width: 36px;
+  height: 36px;
 }
 
 .copy {
-  font-size: 0.875rem;
+  font-size: var(--fs-xs);
   color: var(--text-3);
 }
 
@@ -46,7 +50,7 @@
 }
 
 .nav a {
-  font-size: 0.9375rem;
+  font-size: var(--fs-sm);
   color: var(--text-2);
   text-decoration: none;
   transition: color 0.25s var(--ease);

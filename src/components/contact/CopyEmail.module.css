@@ -6,9 +6,9 @@
 }
 
 .emailLink {
-  font-size: clamp(1.3rem, 1rem + 1.4vw, 2rem);
-  font-weight: 400;
-  letter-spacing: -0.03em;
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-regular);
+  letter-spacing: var(--ls-title);
   color: var(--text);
   text-decoration: none;
   overflow-wrap: anywhere;
@@ -27,7 +27,7 @@
   border-radius: 999px;
   border: 1px solid var(--stroke-2);
   background: var(--glass);
-  font-size: 0.875rem;
+  font-size: var(--fs-sm);
   color: var(--text);
   cursor: pointer;
   transition: border-color 0.25s var(--ease), color 0.25s var(--ease);

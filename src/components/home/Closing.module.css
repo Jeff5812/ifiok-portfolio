@@ -46,7 +46,7 @@
 .aboutTitle em {
   font-style: normal;
   color: var(--orange);
-  font-weight: 500;
+  font-weight: var(--fw-regular);
 }
 
 .facts {
@@ -60,7 +60,8 @@
   border-radius: 999px;
   border: 1px solid var(--stroke);
   background: var(--glass);
-  font-size: 0.875rem;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-medium);
   color: var(--text);
 }
 
@@ -81,75 +82,14 @@
 }
 
 .certTitle {
-  font-size: 1.0625rem;
-  font-weight: 500;
+  font-size: var(--fs-base);
+  font-weight: var(--fw-medium);
   color: var(--text);
 }
 
 .certMeta {
-  font-size: 0.875rem;
+  font-size: var(--fs-sm);
   color: var(--text-3);
-}
-
-.now {
-  display: grid;
-  gap: 14px;
-  padding: 22px 24px;
-  border-radius: 22px;
-}
-
-.nowHead {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.nowDate {
-  font-size: 0.8125rem;
-  color: var(--text-3);
-}
-
-.nowList {
-  display: grid;
-  gap: 12px;
-}
-
-.nowList li {
-  display: grid;
-  grid-template-columns: 12px 1fr;
-  gap: 12px;
-  align-items: baseline;
-}
-
-.nowList strong {
-  display: block;
-  font-size: 0.975rem;
-  font-weight: 500;
-}
-
-.nowList strong a {
-  text-decoration: none;
-}
-
-.nowList strong a:hover {
-  color: var(--orange-2);
-}
-
-.nowList small {
-  font-size: 0.8125rem;
-  color: var(--text-3);
-}
-
-.nowDot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--ok);
-}
-
-.nowDot[data-state="flow"] {
-  background: var(--orange);
 }
 
 /* ---------- home closing band ---------- */
@@ -171,7 +111,7 @@
 .bandTitle em {
   font-style: normal;
   color: var(--orange);
-  font-weight: 500;
+  font-weight: var(--fw-regular);
 }
 
 .bandText {

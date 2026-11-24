@@ -43,14 +43,14 @@
 }
 
 .name {
-  font-size: 1rem;
-  font-weight: 500;
+  font-size: var(--fs-base);
+  font-weight: var(--fw-medium);
   color: var(--text);
   line-height: 1.2;
 }
 
 .role {
-  font-size: 0.8125rem;
+  font-size: var(--fs-xs);
   color: var(--text-3);
   line-height: 1.35;
 }
@@ -79,7 +79,7 @@
 }
 
 .panelHead {
-  font-size: 1rem;
+  font-size: var(--fs-base);
   color: var(--text-2);
   min-height: 3em;
 }
@@ -127,19 +127,20 @@
 .pNum {
   grid-row: 1 / span 2;
   align-self: center;
-  font-family: var(--mono);
-  font-size: 0.8125rem;
+  font-size: var(--fs-xs);
   color: var(--orange-2);
+  font-weight: var(--fw-medium);
+  font-variant-numeric: tabular-nums;
 }
 
 .pTitle {
-  font-size: 0.975rem;
-  font-weight: 500;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
   color: var(--text);
 }
 
 .pKind {
-  font-size: 0.8125rem;
+  font-size: var(--fs-xs);
   color: var(--text-3);
 }
 
@@ -166,7 +167,7 @@
   border-radius: 999px;
   border: 1px solid var(--stroke-2);
   background: none;
-  font-size: 0.875rem;
+  font-size: var(--fs-sm);
   color: var(--text-2);
   cursor: pointer;
 }

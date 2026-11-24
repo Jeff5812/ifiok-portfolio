@@ -15,8 +15,8 @@
   border-radius: 999px;
   border: 1px solid var(--stroke);
   background: var(--glass);
-  font-size: 0.8125rem;
-  font-weight: 500;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-medium);
   color: var(--text-2);
 }
 

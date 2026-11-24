@@ -8,16 +8,15 @@
 }
 
 .title {
-  font-size: clamp(2.6rem, 1.4rem + 4vw, 4.75rem);
-  font-weight: 300;
-  letter-spacing: -0.045em;
+  font-size: var(--fs-display);
+  font-weight: var(--fw-regular);
+  letter-spacing: var(--ls-display);
   line-height: 1;
 }
 
 .title em {
   font-style: normal;
   color: var(--orange);
-  font-weight: 400;
 }
 
 .jump {
@@ -36,10 +35,11 @@
   border-radius: 999px;
   border: 1px solid var(--stroke-2);
   background: var(--glass);
-  font-size: 0.9375rem;
+  font-size: var(--fs-sm);
   color: var(--text);
   text-decoration: none;
   transition: border-color 0.25s var(--ease);
+  font-weight: var(--fw-medium);
 }
 
 .jump a:hover {
@@ -55,8 +55,9 @@
   border-radius: 999px;
   background: var(--orange);
   color: #1a0904;
-  font-size: 0.75rem;
-  font-weight: 600;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  font-variant-numeric: tabular-nums;
 }
 
 .group {
@@ -79,9 +80,9 @@
 }
 
 .groupTitle {
-  font-size: clamp(1.75rem, 1.3rem + 1.4vw, 2.5rem);
-  font-weight: 400;
-  letter-spacing: -0.035em;
+  font-size: var(--fs-xl);
+  font-weight: var(--fw-regular);
+  letter-spacing: var(--ls-title);
 }
 
 .list {
@@ -117,8 +118,9 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-size: 1.125rem;
-  font-weight: 500;
+  font-size: var(--fs-md);
+  font-weight: var(--fw-medium);
+  letter-spacing: var(--ls-tight);
 }
 
 .archive strong svg {
@@ -128,7 +130,7 @@
 }
 
 .archive span {
-  font-size: 0.9375rem;
+  font-size: var(--fs-sm);
   color: var(--text-2);
 }
 

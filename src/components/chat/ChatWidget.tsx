@@ -19,7 +19,7 @@ const BOOKING = [
 const PROJECT_TYPES = ["An AI product or web app", "A WhatsApp or Telegram assistant", "Workflow automation (n8n)", "A full-time or contract role", "Something else"];
 
 const GREETING =
-  "Hi, I'm the IC Assistant. Ask me anything about Ifiok's work, how his systems work, or any of his projects. Or use the buttons to see what he's built or book a call.";
+  "Hi, I'm IC, Ifiok's AI assistant. Ask me anything about his work, how his systems work, or any of his projects. Or use the buttons to see what he's built or book a call.";
 
 function projectSummary(slug: string): Msg[] {
   const p = PROJECTS.find((x) => x.slug === slug);
@@ -207,17 +207,17 @@ function Panel({ intent, hidden }: { intent: string | null; hidden: boolean }) {
     <div
       className={s.panel}
       role="dialog"
-      aria-label="IC Assistant"
+      aria-label="IC, Ifiok's AI assistant"
       hidden={hidden}
       onKeyDown={(e) => e.key === "Escape" && closeChat()}
     >
       <header className={s.head}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/media/portrait-warm.webp" alt="" className={s.avatar} width={40} height={40} />
+        <img src="/media/3d/mascot.webp" alt="" className={s.avatar} width={44} height={44} />
         <div>
-          <p className={s.name}>IC Assistant</p>
+          <p className={s.name}>IC</p>
           <p className={s.sub}>
-            <span className={s.online} aria-hidden /> Answers about Ifiok&rsquo;s work
+            <span className={s.online} aria-hidden /> Ifiok&rsquo;s AI assistant
           </p>
         </div>
         <button type="button" className={s.close} onClick={closeChat} aria-label="Close the assistant">
@@ -295,6 +295,7 @@ function Panel({ intent, hidden }: { intent: string | null; hidden: boolean }) {
         ) : (
           <form
             className={s.form}
+            noValidate // the assistant checks the email itself and answers in the conversation
             onSubmit={(e) => {
               e.preventDefault();
               if (mode === "booking") void submitBooking(input);
@@ -323,26 +324,10 @@ function Panel({ intent, hidden }: { intent: string | null; hidden: boolean }) {
 }
 
 export default function ChatWidget() {
-  const { open, intent, nonce, toggleChat } = useChat();
+  const { open, intent, nonce } = useChat();
   const [mounted, setMounted] = useState(false);
   if (open && !mounted) setMounted(true); // first open mounts the panel; it then stays, hidden, to keep the thread
 
-  return (
-    <div className={s.root}>
-      {mounted && <Panel key={nonce} intent={intent} hidden={!open} />}
-      <button
-        type="button"
-        className={s.trigger}
-        data-open={open}
-        onClick={toggleChat}
-        aria-label={open ? "Close the assistant" : "Open the AI assistant"}
-        aria-expanded={open}
-      >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/media/portrait-warm.webp" alt="" width={44} height={44} />
-        <span className={s.triggerText}>{open ? "Close" : "Ask my AI assistant"}</span>
-        <span className={s.ping} aria-hidden />
-      </button>
-    </div>
-  );
+  // Opened from the "Ask IC" button in the nav, or any "Ask" / "Hire me" button on a page.
+  return <div className={s.root}>{mounted && <Panel key={nonce} intent={intent} hidden={!open} />}</div>;
 }

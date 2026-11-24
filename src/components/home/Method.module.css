@@ -24,22 +24,22 @@
 }
 
 .n {
-  font-size: 3rem;
-  font-weight: 200;
+  font-size: var(--fs-number);
+  font-weight: var(--fw-light);
   line-height: 1;
-  letter-spacing: -0.04em;
+  letter-spacing: var(--ls-display);
   color: transparent;
   -webkit-text-stroke: 1px var(--orange);
 }
 
 .title {
-  font-size: 1.375rem;
-  font-weight: 500;
-  letter-spacing: -0.02em;
+  font-size: var(--fs-md);
+  font-weight: var(--fw-medium);
+  letter-spacing: var(--ls-tight);
 }
 
 .body {
-  font-size: 0.975rem;
+  font-size: var(--fs-sm);
   color: var(--text-2);
 }
 
@@ -50,7 +50,7 @@
   margin-top: auto;
   padding-top: 8px;
   font-family: var(--mono);
-  font-size: 0.8125rem;
+  font-size: var(--fs-xs);
   color: var(--orange-2);
   text-decoration: none;
 }

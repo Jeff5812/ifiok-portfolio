@@ -111,7 +111,7 @@
   border: 1px solid var(--stroke-2);
   background: var(--glass-2);
   color: var(--text);
-  font-size: 1rem;
+  font-size: var(--fs-base);
   cursor: pointer;
 }
 

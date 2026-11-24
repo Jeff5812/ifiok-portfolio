@@ -34,8 +34,8 @@
   border-radius: 8px;
   border: 1px solid var(--stroke-2);
   background: rgb(22 12 8 / 0.94);
-  font-size: 0.75rem;
-  font-weight: 500;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-medium);
   color: var(--text);
   white-space: nowrap;
   opacity: 0;

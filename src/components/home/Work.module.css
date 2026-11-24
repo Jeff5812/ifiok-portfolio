@@ -13,6 +13,6 @@
 
 .more p {
   max-width: 34em;
-  font-size: 0.975rem;
+  font-size: var(--fs-sm);
   color: var(--text-3);
 }

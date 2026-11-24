@@ -3,12 +3,12 @@ import Link from "next/link";
 import AskButton from "@/components/chat/AskButton";
 import Icon from "@/components/ui/Icon";
 import Lightbox from "@/components/ui/Lightbox";
-import { NOW, SITE } from "@/content/site";
+import { SITE } from "@/content/site";
 import s from "./Closing.module.css";
 
 const FACTS = ["Based in Nigeria", "Works remotely", "Python", "TypeScript", "SQL", "n8n"];
 
-/** Bio, facts, certificate and what's happening now. On /about the title is the page's h1. */
+/** Bio, facts and certificate. On /about the title is the page's h1. */
 export function About({ as: Heading = "h2" }: { as?: "h1" | "h2" }) {
   return (
     <section id="about" className={`wrap ${Heading === "h1" ? s.pageTop : "section"}`} aria-labelledby="about-title">
@@ -65,28 +65,6 @@ export function About({ as: Heading = "h2" }: { as?: "h1" | "h2" }) {
               <p className={s.certMeta}>15-week programme · issued 31 August 2026</p>
               <p className={s.certMeta}>Credential TEC-6BF8BE3F</p>
             </div>
-          </div>
-
-          <div id="now" className={`glass ${s.now}`} data-reveal>
-            <p className={s.nowHead}>
-              <span className="status" data-state="ok">
-                Now
-              </span>
-              <span className={s.nowDate}>Updated {SITE.revised}</span>
-            </p>
-            <ul role="list" className={s.nowList}>
-              {NOW.map((n) => (
-                <li key={n.title}>
-                  <span className={s.nowDot} data-state={n.state} aria-hidden />
-                  <span>
-                    <strong>{n.href ? <Link href={n.href}>{n.title}</Link> : n.title}</strong>
-                    <small>
-                      {n.stateLabel} · {n.date}
-                    </small>
-                  </span>
-                </li>
-              ))}
-            </ul>
           </div>
         </div>
       </div>

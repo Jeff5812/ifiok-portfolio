@@ -167,10 +167,10 @@ export const PROJECTS: Project[] = [
       "Live for the client, running on free tiers plus R2's pay-as-you-go storage. 179 tests cover the upload logic, subtitles, layout rules and an end-to-end owner journey against real services.",
     proof: ["Live for a client", "179 tests incl. end-to-end", "Uploads survive a closed tab"],
     image: {
-      src: "/media/mayor-edits-hero.webp",
-      w: 990,
-      h: 1040,
-      alt: "Mayor Edits: 'We make every frame matter' in condensed capitals with a running timecode",
+      src: "/media/mayor-edits-desktop.webp",
+      w: 1600,
+      h: 1000,
+      alt: "The Mayor Edits home page on a desktop: the headline 'We make every frame matter.' beside the studio's featured documentary",
     },
     links: { live: "https://mayor-edits.vercel.app", source: `${GH}/mayor-edits` },
     caseStudy: {

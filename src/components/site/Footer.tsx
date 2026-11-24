@@ -9,7 +9,9 @@ export default function Footer() {
       <div className={`wrap ${s.inner}`}>
         <div className={s.brand}>
           <Link href="/" className={s.logo} aria-label="Ifiok Columba, home">
-            ifiok<span>.</span>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/media/3d/ic-logo.webp" alt="" width={36} height={36} />
+            <span>{SITE.name}</span>
           </Link>
           <p className={s.copy}>
             © 2026 {SITE.name} · {SITE.role}. <a href={SITE.links.source}>Source on GitHub</a>.

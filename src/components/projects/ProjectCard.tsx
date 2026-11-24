@@ -9,7 +9,7 @@ import s from "./ProjectCard.module.css";
 /** A project in the previous site's format: picture, problem, key features, outcome, then actions. */
 export default function ProjectCard({ p, flip = false }: { p: Project; flip?: boolean }) {
   return (
-    <article className={`glass ${s.card}`} data-flip={flip} aria-labelledby={`p-${p.slug}`}>
+    <article className={`glass ${s.card}`} data-flip={flip} data-group={p.group} aria-labelledby={`p-${p.slug}`}>
       <div className={s.media}>
         {p.image && (
           <Lightbox

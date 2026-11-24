@@ -3,10 +3,10 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useId, useState } from "react";
-import Icon from "@/components/ui/Icon";
+import { useChat } from "@/components/chat/ChatContext";
 import s from "./Nav.module.css";
 
-// The previous site's menu, now with a page for each section.
+// The previous site's menu, with a page for each section.
 const LINKS = [
   { label: "Home", href: "/" },
   { label: "Projects", href: "/projects" },
@@ -18,6 +18,7 @@ const LINKS = [
 
 export default function Nav() {
   const pathname = usePathname();
+  const { open: chatOpen, toggleChat } = useChat();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const menuId = useId();
@@ -45,7 +46,9 @@ export default function Nav() {
     <header className={s.bar} data-scrolled={scrolled || open}>
       <div className={`wrap ${s.inner}`}>
         <Link href="/" className={s.logo} aria-label="Ifiok Columba, home">
-          ifiok<span>.</span>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/media/3d/ic-logo.webp" alt="" width={40} height={40} />
+          <span>Ifiok Columba</span>
         </Link>
 
         <nav aria-label="Main" className={s.pill}>
@@ -60,22 +63,34 @@ export default function Nav() {
           </ul>
         </nav>
 
-        <Link href="/contact" className={`btn btn-ghost ${s.cta}`}>
-          <Icon name="send" />
-          Let&rsquo;s talk
-        </Link>
+        <div className={s.right}>
+          <button
+            type="button"
+            className={s.assistant}
+            onClick={() => {
+              setOpen(false);
+              toggleChat();
+            }}
+            aria-expanded={chatOpen}
+            aria-label={chatOpen ? "Close the assistant" : "Ask IC, my AI assistant"}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/media/3d/mascot.webp" alt="" width={34} height={34} />
+            <span className={s.assistantText}>{chatOpen ? "Close" : "Ask IC"}</span>
+          </button>
 
-        <button
-          type="button"
-          className={s.burger}
-          aria-expanded={open}
-          aria-controls={menuId}
-          aria-label={open ? "Close menu" : "Open menu"}
-          onClick={() => setOpen((v) => !v)}
-        >
-          <span />
-          <span />
-        </button>
+          <button
+            type="button"
+            className={s.burger}
+            aria-expanded={open}
+            aria-controls={menuId}
+            aria-label={open ? "Close menu" : "Open menu"}
+            onClick={() => setOpen((v) => !v)}
+          >
+            <span />
+            <span />
+          </button>
+        </div>
       </div>
 
       <div id={menuId} className={s.sheet} hidden={!open}>
@@ -88,9 +103,6 @@ export default function Nav() {
             </li>
           ))}
         </ul>
-        <Link href="/contact" className="btn btn-primary" onClick={() => setOpen(false)}>
-          Let&rsquo;s talk
-        </Link>
       </div>
     </header>
   );
